@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://synapse-v1-alpha.vercel.app/sitemap.xml

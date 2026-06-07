@@ -651,14 +651,14 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
     </div>
   </div>
   <nav class="nav-menu">
-    <a onclick="showSection('inicio')">Inicio</a>
-    <a onclick="showSection('registro')">Registro</a>
-    <a onclick="showSection('planes')">Planes</a>
-    <a onclick="showSection('configuracion')">Configuración</a>
-    <a onclick="showSection('entrenamiento')">Entrenamiento</a>
-    <a onclick="showSection('vincular')">Vincular Chat</a>
-    <a onclick="showSection('roi')">ROI</a>
-    <a onclick="showSection('contactos')">Contactos</a>
+    <a href="#inicio" onclick="showSection('inicio'); return false;">Inicio</a>
+    <a href="#registro" onclick="showSection('registro'); return false;">Registro</a>
+    <a href="#planes" onclick="showSection('planes'); return false;">Planes</a>
+    <a href="#configuracion" onclick="showSection('configuracion'); return false;">Configuración</a>
+    <a href="#entrenamiento" onclick="showSection('entrenamiento'); return false;">Entrenamiento</a>
+    <a href="#vincular" onclick="showSection('vincular'); return false;">Vincular Chat</a>
+    <a href="#roi" onclick="showSection('roi'); return false;">ROI</a>
+    <a href="#contactos" onclick="showSection('contactos'); return false;">Contactos</a>
   </nav>
   <div class="nav-btn" id="hamburger" onclick="toggleMobileMenu()">
     <span></span><span></span><span></span>
@@ -666,14 +666,14 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
 </header>
 
 <nav class="mobile-menu" id="mobile-menu">
-  <a onclick="showSectionMobile('inicio')">🏠 Inicio</a>
-  <a onclick="showSectionMobile('registro')">📝 Registro</a>
-  <a onclick="showSectionMobile('planes')">💎 Planes y Precios</a>
-  <a onclick="showSectionMobile('configuracion')">⚙️ Configuración</a>
-  <a onclick="showSectionMobile('entrenamiento')">🧠 Entrenamiento del Bot</a>
-  <a onclick="showSectionMobile('vincular')">🔗 Vincular Burbuja Chat</a>
-  <a onclick="showSectionMobile('roi')">📊 Calcular ROI</a>
-  <a onclick="showSectionMobile('contactos')">📞 Contactos</a>
+  <a href="#inicio" onclick="showSectionMobile('inicio'); return false;">🏠 Inicio</a>
+  <a href="#registro" onclick="showSectionMobile('registro'); return false;">📝 Registro</a>
+  <a href="#planes" onclick="showSectionMobile('planes'); return false;">💎 Planes y Precios</a>
+  <a href="#configuracion" onclick="showSectionMobile('configuracion'); return false;">⚙️ Configuración</a>
+  <a href="#entrenamiento" onclick="showSectionMobile('entrenamiento'); return false;">🧠 Entrenamiento del Bot</a>
+  <a href="#vincular" onclick="showSectionMobile('vincular'); return false;">🔗 Vincular Burbuja Chat</a>
+  <a href="#roi" onclick="showSectionMobile('roi'); return false;">📊 Calcular ROI</a>
+  <a href="#contactos" onclick="showSectionMobile('contactos'); return false;">📞 Contactos</a>
 </nav>
 
 <div class="sections-container">

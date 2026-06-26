@@ -771,7 +771,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
         <option value="">Selecciona un modelo</option>
       </select>
       <label style="display:block;margin-top:10px;" for="api-key">API Key (Opcional)</label>
-      <input type="password" id="api-key" placeholder="Tu API key aquí">
+      <label for="api-key" class="sr-only">API Key</label><input type="password" id="api-key" placeholder="Tu API key aquí">
     </div>
     <button class="cta" onclick="saveConfiguration()" style="width:100%;max-width:100%;margin:0;">Guardar Configuración</button>
   </div>
@@ -812,10 +812,10 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
     <h2 style="font-size:clamp(1.8rem,4vw,2.5rem);margin-bottom:1rem;">📱 Redes Sociales</h2>
     <p style="font-size:0.95rem;">Integra tu bot en WhatsApp, Instagram, Facebook y más automáticamente con Callbell.</p>
     <div class="form-container" style="margin:1.5rem 0;">
-      <div class="form-group"><label>Email Callbell</label><label for="email-callbell">Correo electrónico</label><label class="sr-only">Email</label><input type="email" id="email-callbell" placeholder="tu@email.com"></div>
-      <div class="form-group"><label>API Key Callbell</label><label for="nombre">Nombre</label><label class="sr-only">Búsqueda</label><input type="text" id="nombre" placeholder="Tu API Key"><p style="color:var(--muted);font-size:0.78rem;margin-top:0.4rem;">Obtén tu API Key en: <a href="https://callbell.io/dashboard" target="_blank" style="color:var(--cyan);">callbell.io/dashboard</a></p></div>
-      <div class="form-group"><label>Nombre del Bot</label><label for="nombre-bot">Nombre</label><label class="sr-only">Búsqueda</label><input type="text" id="nombre-bot" value="Assistent.ai"></div>
-      <div class="form-group"><label>WhatsApp (opcional)</label><label for="nombre-whatsapp">Nombre</label><label class="sr-only">Búsqueda</label><input type="text" id="nombre-whatsapp" value="+58 412 2664528"></div>
+      <div class="form-group"><label for="email-callbell">Correo electrónico</label><label class="sr-only">Email</label><input type="email" id="email-callbell" placeholder="tu@email.com"></div>
+      <div class="form-group"><label class="sr-only">Búsqueda</label><input type="text" id="nombre" placeholder="Tu API Key"><p style="color:var(--muted);font-size:0.78rem;margin-top:0.4rem;">Obtén tu API Key en: <a href="https://callbell.io/dashboard" target="_blank" style="color:var(--cyan);">callbell.io/dashboard</a></p></div>
+      <div class="form-group"><label class="sr-only">Búsqueda</label><input type="text" id="nombre-bot" value="Assistent.ai"></div>
+      <div class="form-group"><label class="sr-only">Búsqueda</label><input type="text" id="nombre-whatsapp" value="+58 412 2664528"></div>
       <button class="cta" style="width:100%;max-width:100%;margin:0;">🔗 Conectar Callbell</button>
       <button class="cta-secondary" style="width:100%;max-width:100%;margin:10px 0 0;">📖 Ver Guía</button>
     </div>
@@ -914,8 +914,8 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   <div class="form-container">
     <h3 style="font-family:'Dancing Script',cursive;color:var(--cyan);margin-bottom:1.5rem;font-size:1.8rem;">Enviar Mensaje</h3>
     <form onsubmit="sendContactForm(event)">
-      <div class="form-group"><label for="contact-name">Nombre</label><label for="nombre">Nombre</label><label class="sr-only">Búsqueda</label><input type="text" id="contact-name" required></div>
-      <div class="form-group"><label for="contact-email">Email</label><label for="contact-email">Correo electrónico</label><label class="sr-only">Email</label><input type="email" id="contact-email" required></div>
+      <div class="form-group"><label for="contact-name">Nombre</label><label class="sr-only">Búsqueda</label><input type="text" id="contact-name" required></div>
+      <div class="form-group"><label for="contact-email">Correo electrónico</label><label class="sr-only">Email</label><input type="email" id="contact-email" required></div>
       <div class="form-group"><label for="contact-message">Mensaje</label><textarea id="contact-message" style="height:120px;" required></textarea></div>
       <button type="submit" class="cta" style="width:100%;max-width:100%;margin:0;">Enviar Mensaje</button>
     </form>

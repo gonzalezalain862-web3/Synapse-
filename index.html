@@ -757,21 +757,21 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
 <section id="configuracion">
   <h2>Configuración</h2>
   <div class="form-container">
-    <div class="form-group"><label for="language">Idioma</label><label class="sr-only">Opción</label><select id="language"><option value="es">Español</option><option value="en">Inglés</option><option value="pt">Portugués</option></select></div>
+    <div class="form-group"><label for="language">Idioma</label><label class="sr-only">Opción</label><select id="language" aria-label="Idioma"><option value="es">Español</option><option value="en">Inglés</option><option value="pt">Portugués</option></select></div>
     <div class="form-group">
       <label for="ia-select">IA por Defecto</label>
       <div style="display:block;color:#a5b4fc;font-size:12px;margin-bottom:8px;">⚡ Modelos de IA:</div>
-      <label class="sr-only">Opción</label><select id="config-provider" onchange="updateConfigModels()" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;">
+      <label class="sr-only">Opción</label><select id="config-provider" aria-label="Proveedor" onchange="updateConfigModels()" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;">
         <option value="groq">⚡ Groq</option>
         <option value="openrouter">🌐 OpenRouter</option>
         <option value="github">🐙 GitHub Models</option>
       </select>
       <div style="display:block;color:#a5b4fc;font-size:12px;margin:10px 0 8px 0;">🤖 Modelo:</div>
-      <label class="sr-only">Opción</label><select id="config-model" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;">
+      <label class="sr-only">Opción</label><select id="config-model" aria-label="Modelo" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;">
         <option value="">Selecciona un modelo</option>
       </select>
       <label style="display:block;margin-top:10px;" for="api-key">API Key (Opcional)</label>
-      <label for="api-key" class="sr-only">API Key</label><input type="password" id="api-key" placeholder="Tu API key aquí">
+      <label for="api-key" class="sr-only">API Key</label><label for="api-key" class="sr-only">API Key</label><input type="password" id="api-key" placeholder="Tu API key aquí">
     </div>
     <button class="cta" onclick="saveConfiguration()" style="width:100%;max-width:100%;margin:0;">Guardar Configuración</button>
   </div>
@@ -804,7 +804,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
     <div class="form-container" style="margin:1.5rem 0;">
       <span class="vc-label">Código del widget:</span>
       <div class="vc-code"><pre id="vc1-code">&lt;script src="https://assistent.ai/chatwidget.js"&gt;&lt;/script&gt;</pre></div>
-      <button class="vc-copy" onclick="vcCopiar('vc1-code', this)">📋 Copiar código</button>
+      <button class="vc-copy" aria-label="Copiar código" onclick="vcCopiar('vc1-code', this)">📋 Copiar código</button>
       <div class="vc-success"><p>✓ Se instala en cualquier sitio HTML &nbsp;·&nbsp; ✓ Activación inmediata &nbsp;·&nbsp; ✓ Responsive</p></div>
     </div>
   </div>
@@ -826,7 +826,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
     <div class="form-container" style="margin:1.5rem 0;">
       <span class="vc-label">① Tracking HubSpot (Portal ID: 50512145)</span>
       <div class="vc-code"><pre id="vc3-tracking">&lt;script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/50512145.js"&gt;&lt;/script&gt;</pre></div>
-      <button class="vc-copy" onclick="vcCopiar('vc3-tracking', this)">📋 Copiar código ①</button>
+      <button class="vc-copy" aria-label="Copiar código" onclick="vcCopiar('vc3-tracking', this)">📋 Copiar código ①</button>
       <span class="vc-label">② Burbuja Chat IA de Assistent.ai</span>
       <div class="vc-code"><pre id="vc3-bubble">&lt;script&gt;
  window.AssistentConfig = {
@@ -838,7 +838,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
  };
 &lt;/script&gt;
 &lt;script async src="https://cdn.assistent.ai/widget/v2/bubble.min.js"&gt;&lt;/script&gt;</pre></div>
-      <button class="vc-copy" onclick="vcCopiar('vc3-bubble', this)">📋 Copiar código ②</button>
+      <button class="vc-copy" aria-label="Copiar código" onclick="vcCopiar('vc3-bubble', this)">📋 Copiar código ②</button>
       <div class="vc-success" style="margin-top:1rem;"><p>✓ Burbuja IA 24/7 en tu landing<br>✓ Leads al CRM automáticamente<br>✓ Gratis con HubSpot Free</p></div>
     </div>
   </div>
@@ -850,15 +850,15 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
       <p style="color:var(--cyan);font-size:0.85rem;font-weight:600;margin-bottom:0.6rem;">Compatible con:</p>
       <div class="op4-badges"><span class="op4-badge">🔍 Google Ads</span><span class="op4-badge">📘 Facebook Ads</span><span class="op4-badge">📸 Instagram Ads</span><span class="op4-badge">💼 LinkedIn Ads</span><span class="op4-badge">🎵 TikTok Ads</span></div>
       <p style="color:var(--cyan);font-size:0.9rem;font-weight:600;margin-bottom:0.5rem;">Tu Portal ID de HubSpot:</p>
-      <div class="op4-portal-row"><label for="nombre">Nombre</label><label class="sr-only">Búsqueda</label><input type="text" id="op4-portal-id" placeholder="Ej: 50512145" value="50512145"><button class="op4-gen-btn" onclick="generarCodigosOP4()">⚡ Generar</button></div>
+      <div class="op4-portal-row"><label for="nombre">Nombre</label><label class="sr-only">Búsqueda</label><input type="text" id="op4-portal-id" aria-label="Portal ID" placeholder="Ej: 50512145" value="50512145"><button class="op4-gen-btn" onclick="generarCodigosOP4()" aria-label="Generar códigos">⚡ Generar</button></div>
       <p style="color:var(--muted);font-size:0.78rem;margin-bottom:1rem;">HubSpot → Configuración → Cuenta → Portal ID &nbsp;|&nbsp; <a href="https://app.hubspot.com/signup-hubspot/crm" target="_blank" style="color:var(--cyan);text-decoration:none;">Crear cuenta gratis →</a></p>
       <div id="op4-output" style="display:none;">
         <span class="vc-label">① Código Tracking HubSpot (pega primero):</span>
         <div class="vc-code"><pre id="op4-code-tracking"></pre></div>
-        <button class="vc-copy" onclick="vcCopiar('op4-code-tracking', this)">📋 Copiar código ①</button>
+        <button class="vc-copy" aria-label="Copiar código" onclick="vcCopiar('op4-code-tracking', this)">📋 Copiar código ①</button>
         <span class="vc-label">② Burbuja Chat IA (pega segundo):</span>
         <div class="vc-code"><pre id="op4-code-bubble"></pre></div>
-        <button class="vc-copy" onclick="vcCopiar('op4-code-bubble', this)">📋 Copiar código ②</button>
+        <button class="vc-copy" aria-label="Copiar código" onclick="vcCopiar('op4-code-bubble', this)">📋 Copiar código ②</button>
         <div class="vc-success" style="margin-top:1rem;"><p>✓ Burbuja flotante IA 24/7 activa en tus anuncios<br>✓ Leads directo a HubSpot CRM automáticamente<br>✓ 100% gratis con HubSpot Free</p></div>
       </div>
     </div>
@@ -937,12 +937,12 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   </div>
   <div class="ai-selector">
     <label for="select-ia">Selecciona tu IA:</label>
-    <label class="sr-only">Opción</label><select id="chat-provider" onchange="updateChatModels()" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;">
+    <label class="sr-only">Opción</label><select id="chat-provider" aria-label="Proveedor de chat" onchange="updateChatModels()" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;">
       <option value="groq">⚡ Groq</option>
       <option value="openrouter">🌐 OpenRouter</option>
       <option value="github">🐙 GitHub Models</option>
     </select>
-    <label class="sr-only">Opción</label><select id="chat-model" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;">
+    <label class="sr-only">Opción</label><select id="chat-model" aria-label="Modelo de chat" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;">
       <option value="">Selecciona un modelo</option>
     </select>
   </div>

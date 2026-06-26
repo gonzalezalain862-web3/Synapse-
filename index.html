@@ -598,6 +598,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   <link rel="canonical" href="https://synapse-v1-alpha.vercel.app/">
   <link rel="stylesheet" href="estilos-accesibilidad.css">
   <style>.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;}</style>
+  <style>.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}</style>
 </head>
 <body>
   <header style="display:flex; align-items:center; justify-content:center; gap:15px; padding:20px; background:var(--glass); backdrop-filter:var(--blur); border-bottom:1px solid rgba(124,58,237,0.3); position:fixed; top:0; left:0; right:0; z-index:1000;">
@@ -702,7 +703,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   <h2>Crear Cuenta</h2>
   <div class="form-container">
     <form onsubmit="handleRegister(event)">
-      <div class="form-group"><label for="email">Correo electrónico</label><input type="email" id="email" placeholder="tu@email.com" required></div>
+      <div class="form-group"><label for="email">Correo electrónico</label><label class="sr-only">Email</label><input type="email" id="email" placeholder="tu@email.com" required></div>
       <div class="form-group"><label for="password">Contraseña</label><input type="password" id="password" placeholder="Contraseña segura" required></div>
       <div class="form-group"><label for="confirm-password">Confirmar Contraseña</label><input type="password" id="confirm-password" placeholder="Confirma tu contraseña" required></div>
       <button type="submit" class="cta" style="width:100%;max-width:100%;margin:0;">✦ Registrarse</button>
@@ -756,17 +757,17 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
 <section id="configuracion">
   <h2>Configuración</h2>
   <div class="form-container">
-    <div class="form-group"><label for="language">Idioma</label><select id="language"><option value="es">Español</option><option value="en">Inglés</option><option value="pt">Portugués</option></select></div>
+    <div class="form-group"><label for="language">Idioma</label><label class="sr-only">Opción</label><select id="language"><option value="es">Español</option><option value="en">Inglés</option><option value="pt">Portugués</option></select></div>
     <div class="form-group">
       <label for="ia-select">IA por Defecto</label>
       <div style="display:block;color:#a5b4fc;font-size:12px;margin-bottom:8px;">⚡ Modelos de IA:</div>
-      <select id="config-provider" onchange="updateConfigModels()" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;">
+      <label class="sr-only">Opción</label><select id="config-provider" onchange="updateConfigModels()" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;">
         <option value="groq">⚡ Groq</option>
         <option value="openrouter">🌐 OpenRouter</option>
         <option value="github">🐙 GitHub Models</option>
       </select>
       <div style="display:block;color:#a5b4fc;font-size:12px;margin:10px 0 8px 0;">🤖 Modelo:</div>
-      <select id="config-model" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;">
+      <label class="sr-only">Opción</label><select id="config-model" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;">
         <option value="">Selecciona un modelo</option>
       </select>
       <label style="display:block;margin-top:10px;" for="api-key">API Key (Opcional)</label>
@@ -781,7 +782,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   <h2>Entrenamiento del Bot</h2>
   <p>Personaliza tu bot con información de tu negocio para respuestas más precisas</p>
   <div class="form-container">
-    <div class="form-group"><label for="bot-name">Nombre del Bot</label><input type="text" id="bot-name" placeholder="Mi Bot Inteligente"></div>
+    <div class="form-group"><label for="bot-name">Nombre del Bot</label><label class="sr-only">Búsqueda</label><input type="text" id="bot-name" placeholder="Mi Bot Inteligente"></div>
     <div class="form-group"><label for="bot-description">Descripción</label><textarea id="bot-description" placeholder="¿Qué hace tu bot?" style="height:100px;"></textarea></div>
     <div class="form-group"><label for="training-file">Cargar Archivo de Entrenamiento</label><input type="file" id="training-file" accept=".txt,.pdf,.csv"></div>
     <div class="form-group"><label for="context">Contexto del Bot</label><textarea id="context" placeholder="Instrucciones especiales para tu bot..." style="height:120px;"></textarea></div>
@@ -811,10 +812,10 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
     <h2 style="font-size:clamp(1.8rem,4vw,2.5rem);margin-bottom:1rem;">📱 Redes Sociales</h2>
     <p style="font-size:0.95rem;">Integra tu bot en WhatsApp, Instagram, Facebook y más automáticamente con Callbell.</p>
     <div class="form-container" style="margin:1.5rem 0;">
-      <div class="form-group"><label>Email Callbell</label><label for="email-callbell">Correo electrónico</label><input type="email" id="email-callbell" placeholder="tu@email.com"></div>
-      <div class="form-group"><label>API Key Callbell</label><label for="nombre">Nombre</label><input type="text" id="nombre" placeholder="Tu API Key"><p style="color:var(--muted);font-size:0.78rem;margin-top:0.4rem;">Obtén tu API Key en: <a href="https://callbell.io/dashboard" target="_blank" style="color:var(--cyan);">callbell.io/dashboard</a></p></div>
-      <div class="form-group"><label>Nombre del Bot</label><label for="nombre-bot">Nombre</label><input type="text" id="nombre-bot" value="Assistent.ai"></div>
-      <div class="form-group"><label>WhatsApp (opcional)</label><label for="nombre-whatsapp">Nombre</label><input type="text" id="nombre-whatsapp" value="+58 412 2664528"></div>
+      <div class="form-group"><label>Email Callbell</label><label for="email-callbell">Correo electrónico</label><label class="sr-only">Email</label><input type="email" id="email-callbell" placeholder="tu@email.com"></div>
+      <div class="form-group"><label>API Key Callbell</label><label for="nombre">Nombre</label><label class="sr-only">Búsqueda</label><input type="text" id="nombre" placeholder="Tu API Key"><p style="color:var(--muted);font-size:0.78rem;margin-top:0.4rem;">Obtén tu API Key en: <a href="https://callbell.io/dashboard" target="_blank" style="color:var(--cyan);">callbell.io/dashboard</a></p></div>
+      <div class="form-group"><label>Nombre del Bot</label><label for="nombre-bot">Nombre</label><label class="sr-only">Búsqueda</label><input type="text" id="nombre-bot" value="Assistent.ai"></div>
+      <div class="form-group"><label>WhatsApp (opcional)</label><label for="nombre-whatsapp">Nombre</label><label class="sr-only">Búsqueda</label><input type="text" id="nombre-whatsapp" value="+58 412 2664528"></div>
       <button class="cta" style="width:100%;max-width:100%;margin:0;">🔗 Conectar Callbell</button>
       <button class="cta-secondary" style="width:100%;max-width:100%;margin:10px 0 0;">📖 Ver Guía</button>
     </div>
@@ -849,7 +850,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
       <p style="color:var(--cyan);font-size:0.85rem;font-weight:600;margin-bottom:0.6rem;">Compatible con:</p>
       <div class="op4-badges"><span class="op4-badge">🔍 Google Ads</span><span class="op4-badge">📘 Facebook Ads</span><span class="op4-badge">📸 Instagram Ads</span><span class="op4-badge">💼 LinkedIn Ads</span><span class="op4-badge">🎵 TikTok Ads</span></div>
       <p style="color:var(--cyan);font-size:0.9rem;font-weight:600;margin-bottom:0.5rem;">Tu Portal ID de HubSpot:</p>
-      <div class="op4-portal-row"><label for="nombre">Nombre</label><input type="text" id="op4-portal-id" placeholder="Ej: 50512145" value="50512145"><button class="op4-gen-btn" onclick="generarCodigosOP4()">⚡ Generar</button></div>
+      <div class="op4-portal-row"><label for="nombre">Nombre</label><label class="sr-only">Búsqueda</label><input type="text" id="op4-portal-id" placeholder="Ej: 50512145" value="50512145"><button class="op4-gen-btn" onclick="generarCodigosOP4()">⚡ Generar</button></div>
       <p style="color:var(--muted);font-size:0.78rem;margin-bottom:1rem;">HubSpot → Configuración → Cuenta → Portal ID &nbsp;|&nbsp; <a href="https://app.hubspot.com/signup-hubspot/crm" target="_blank" style="color:var(--cyan);text-decoration:none;">Crear cuenta gratis →</a></p>
       <div id="op4-output" style="display:none;">
         <span class="vc-label">① Código Tracking HubSpot (pega primero):</span>
@@ -913,8 +914,8 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   <div class="form-container">
     <h3 style="font-family:'Dancing Script',cursive;color:var(--cyan);margin-bottom:1.5rem;font-size:1.8rem;">Enviar Mensaje</h3>
     <form onsubmit="sendContactForm(event)">
-      <div class="form-group"><label for="contact-name">Nombre</label><label for="nombre">Nombre</label><input type="text" id="contact-name" required></div>
-      <div class="form-group"><label for="contact-email">Email</label><label for="contact-email">Correo electrónico</label><input type="email" id="contact-email" required></div>
+      <div class="form-group"><label for="contact-name">Nombre</label><label for="nombre">Nombre</label><label class="sr-only">Búsqueda</label><input type="text" id="contact-name" required></div>
+      <div class="form-group"><label for="contact-email">Email</label><label for="contact-email">Correo electrónico</label><label class="sr-only">Email</label><input type="email" id="contact-email" required></div>
       <div class="form-group"><label for="contact-message">Mensaje</label><textarea id="contact-message" style="height:120px;" required></textarea></div>
       <button type="submit" class="cta" style="width:100%;max-width:100%;margin:0;">Enviar Mensaje</button>
     </form>
@@ -936,12 +937,12 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   </div>
   <div class="ai-selector">
     <label for="select-ia">Selecciona tu IA:</label>
-    <select id="chat-provider" onchange="updateChatModels()" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;">
+    <label class="sr-only">Opción</label><select id="chat-provider" onchange="updateChatModels()" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;">
       <option value="groq">⚡ Groq</option>
       <option value="openrouter">🌐 OpenRouter</option>
       <option value="github">🐙 GitHub Models</option>
     </select>
-    <select id="chat-model" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;">
+    <label class="sr-only">Opción</label><select id="chat-model" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;">
       <option value="">Selecciona un modelo</option>
     </select>
   </div>

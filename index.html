@@ -599,6 +599,27 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   <link rel="stylesheet" href="estilos-accesibilidad.css">
   <style>.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;}</style>
   <style>.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}</style>
+<style>
+  @media (max-width: 1024px) {
+    .nav-btn {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 5px !important;
+      cursor: pointer;
+      z-index: 1002;
+      position: absolute !important;
+      top: 25px !important;
+      right: 5% !important;
+    }
+    .nav-btn span {
+      display: block !important;
+      width: 26px !important;
+      height: 2px !important;
+      background: #c084fc !important;
+      border-radius: 2px;
+    }
+  }
+</style>
 </head>
 <body>
   <header style="display:flex; align-items:center; justify-content:center; gap:15px; padding:20px; background:var(--glass); backdrop-filter:var(--blur); border-bottom:1px solid rgba(124,58,237,0.3); position:fixed; top:0; left:0; right:0; z-index:1000;">

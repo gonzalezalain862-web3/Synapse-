@@ -620,6 +620,35 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
     }
   }
 </style>
+<style>
+  header {
+    overflow: visible !important;
+    position: fixed !important;
+  }
+  @media (max-width: 1024px) {
+    .nav-btn {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 5px !important;
+      cursor: pointer;
+      z-index: 99999 !important;
+      position: absolute !important;
+      top: 22px !important;
+      right: 20px !important;
+      width: 30px !important;
+      height: 24px !important;
+      justify-content: space-between !important;
+    }
+    .nav-btn span {
+      display: block !important;
+      width: 100% !important;
+      height: 3px !important;
+      background-color: #c084fc !important;
+      background: linear-gradient(90deg, #c084fc, #22d3ee) !important;
+      border-radius: 4px !important;
+    }
+  }
+</style>
 </head>
 <body>
   <header style="display:flex; align-items:center; justify-content:center; gap:15px; padding:20px; background:var(--glass); backdrop-filter:var(--blur); border-bottom:1px solid rgba(124,58,237,0.3); position:fixed; top:0; left:0; right:0; z-index:1000;">

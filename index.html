@@ -793,7 +793,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
 <!-- VINCULAR -->
 <section id="vincular">
   <div class="vincular-topbar">
-    <button class="vincular-menu-btn" id="vmenu-btn" onclick="toggleVDrawer()">
+    <button class="vincular-menu-btn" id="vmenu-btn" onclick="toggleVDrawer()" aria-label="Abrir menú de vinculación">
       <span></span><span></span><span></span>
     </button>
     <span class="vincular-current-title" id="vcurrent-title">🌐 Opción 1: Sitio Web</span>
@@ -850,7 +850,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
       <p style="color:var(--cyan);font-size:0.85rem;font-weight:600;margin-bottom:0.6rem;">Compatible con:</p>
       <div class="op4-badges"><span class="op4-badge">🔍 Google Ads</span><span class="op4-badge">📘 Facebook Ads</span><span class="op4-badge">📸 Instagram Ads</span><span class="op4-badge">💼 LinkedIn Ads</span><span class="op4-badge">🎵 TikTok Ads</span></div>
       <p style="color:var(--cyan);font-size:0.9rem;font-weight:600;margin-bottom:0.5rem;">Tu Portal ID de HubSpot:</p>
-      <div class="op4-portal-row"><label for="nombre">Nombre</label><label class="sr-only">Búsqueda</label><input type="text" aria-label="Campo de texto"    id="op4-portal-id" aria-label="Portal ID" placeholder="Ej: 50512145" value="50512145"><button class="op4-gen-btn" onclick="generarCodigosOP4()" aria-label="Generar códigos">⚡ Generar</button></div>
+      <div class="op4-portal-row"><label for="op4-portal-id">Nombre de Búsqueda</label><input type="text" id="op4-portal-id" aria-label="Identificador de Portal ID" placeholder="Ej: 50512145" value="50512145"><button class="op4-gen-btn" onclick="generarCodigosOP4()" aria-label="Generar códigos">⚡ Generar</button></div>
       <p style="color:var(--muted);font-size:0.78rem;margin-bottom:1rem;">HubSpot → Configuración → Cuenta → Portal ID &nbsp;|&nbsp; <a href="https://app.hubspot.com/signup-hubspot/crm" target="_blank" style="color:var(--cyan);text-decoration:none;">Crear cuenta gratis →</a></p>
       <div id="op4-output" style="display:none;">
         <span class="vc-label">① Código Tracking HubSpot (pega primero):</span>

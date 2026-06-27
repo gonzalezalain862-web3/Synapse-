@@ -703,7 +703,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   <h2>Crear Cuenta</h2>
   <div class="form-container">
     <form onsubmit="handleRegister(event)">
-      <div class="form-group"><label for="email">Correo electrónico</label><label class="sr-only">Email</label><input type="email" aria-label="Correo electrónico"   name="email" id="email" placeholder="tu@email.com" required></div>
+      <div class="form-group"><label for="email">Correo electrónico</label><input type="email" aria-label="Correo electrónico"   name="email" id="email" placeholder="tu@email.com" required></div>
       <div class="form-group"><label for="password">Contraseña</label><input type="password" aria-label="Contraseña"   name="password" id="password" placeholder="Contraseña segura" required></div>
       <div class="form-group"><label for="confirm-password">Confirmar Contraseña</label><input type="password" aria-label="Contraseña"   name="password" id="confirm-password" placeholder="Confirma tu contraseña" required></div>
       <button type="submit" class="cta" style="width:100%;max-width:100%;margin:0;">✦ Registrarse</button>
@@ -757,21 +757,21 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
 <section id="configuracion">
   <h2>Configuración</h2>
   <div class="form-container">
-    <div class="form-group"><label for="language">Idioma</label><label class="sr-only">Opción</label><select aria-label="Seleccionar opción"    id="language" aria-label="Idioma"><option value="es">Español</option><option value="en">Inglés</option><option value="pt">Portugués</option></select></div>
+    <div class="form-group"><label for="language">Idioma</label><select id="language" aria-label="Idioma"><option value="es">Español</option><option value="en">Inglés</option><option value="pt">Portugués</option></select></div>
     <div class="form-group">
       <label for="ia-select">IA por Defecto</label>
       <div style="display:block;color:#a5b4fc;font-size:12px;margin-bottom:8px;">⚡ Modelos de IA:</div>
-      <label class="sr-only">Opción</label><select aria-label="Seleccionar opción"    id="config-provider" aria-label="Proveedor" onchange="updateConfigModels()" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;">
+      <select id="config-provider" aria-label="Proveedor de IA" onchange="updateConfigModels()" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;">
         <option value="groq">⚡ Groq</option>
         <option value="openrouter">🌐 OpenRouter</option>
         <option value="github">🐙 GitHub Models</option>
       </select>
       <div style="display:block;color:#a5b4fc;font-size:12px;margin:10px 0 8px 0;">🤖 Modelo:</div>
-      <label class="sr-only">Opción</label><select aria-label="Seleccionar opción"    id="config-model" aria-label="Modelo" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;">
+      <select id="config-model" aria-label="Modelo de IA" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;">
         <option value="">Selecciona un modelo</option>
       </select>
       <label style="display:block;margin-top:10px;" for="api-key">API Key (Opcional)</label>
-      <label for="api-key" class="sr-only">API Key</label><label for="api-key" class="sr-only">API Key</label><input type="password" aria-label="Contraseña"   name="password" id="api-key" placeholder="Tu API key aquí">
+      <input type="password" aria-label="Contraseña"   name="password" id="api-key" placeholder="Tu API key aquí">
     </div>
     <button class="cta" onclick="saveConfiguration()" style="width:100%;max-width:100%;margin:0;">Guardar Configuración</button>
   </div>
@@ -782,7 +782,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   <h2>Entrenamiento del Bot</h2>
   <p>Personaliza tu bot con información de tu negocio para respuestas más precisas</p>
   <div class="form-container">
-    <div class="form-group"><label for="bot-name">Nombre del Bot</label><label class="sr-only">Búsqueda</label><input type="text" aria-label="Campo de texto"    id="bot-name" placeholder="Mi Bot Inteligente"></div>
+    <div class="form-group"><label for="bot-name">Nombre del Bot</label><input type="text" aria-label="Campo de texto"    id="bot-name" placeholder="Mi Bot Inteligente"></div>
     <div class="form-group"><label for="bot-description">Descripción</label><textarea aria-label="Escribe tu mensaje aquí"   name="mensaje"  id="bot-description" placeholder="¿Qué hace tu bot?" style="height:100px;"></textarea></div>
     <div class="form-group"><label for="training-file">Cargar Archivo de Entrenamiento</label><input type="file" id="training-file" accept=".txt,.pdf,.csv"></div>
     <div class="form-group"><label for="context">Contexto del Bot</label><textarea aria-label="Escribe tu mensaje aquí"   name="mensaje"  id="context" placeholder="Instrucciones especiales para tu bot..." style="height:120px;"></textarea></div>
@@ -812,10 +812,10 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
     <h2 style="font-size:clamp(1.8rem,4vw,2.5rem);margin-bottom:1rem;">📱 Redes Sociales</h2>
     <p style="font-size:0.95rem;">Integra tu bot en WhatsApp, Instagram, Facebook y más automáticamente con Callbell.</p>
     <div class="form-container" style="margin:1.5rem 0;">
-      <div class="form-group"><label for="email-callbell">Correo electrónico</label><label class="sr-only">Email</label><input type="email" aria-label="Correo electrónico"   name="email" id="email-callbell" placeholder="tu@email.com"></div>
-      <div class="form-group"><label class="sr-only">Búsqueda</label><input type="text" aria-label="Campo de texto"    id="nombre" placeholder="Tu API Key"><p style="color:var(--muted);font-size:0.78rem;margin-top:0.4rem;">Obtén tu API Key en: <a href="https://callbell.io/dashboard" target="_blank" style="color:var(--cyan);">callbell.io/dashboard</a></p></div>
-      <div class="form-group"><label class="sr-only">Búsqueda</label><input type="text" aria-label="Campo de texto"    id="nombre-bot" value="Assistent.ai"></div>
-      <div class="form-group"><label class="sr-only">Búsqueda</label><input type="text" aria-label="Campo de texto"    id="nombre-whatsapp" value="+58 412 2664528"></div>
+      <div class="form-group"><label for="email-callbell">Correo electrónico</label><input type="email" aria-label="Correo electrónico"   name="email" id="email-callbell" placeholder="tu@email.com"></div>
+      <div class="form-group"><input type="text" aria-label="Campo de texto"    id="nombre" placeholder="Tu API Key"><p style="color:var(--muted);font-size:0.78rem;margin-top:0.4rem;">Obtén tu API Key en: <a href="https://callbell.io/dashboard" target="_blank" style="color:var(--cyan);">callbell.io/dashboard</a></p></div>
+      <div class="form-group"><input type="text" aria-label="Campo de texto"    id="nombre-bot" value="Assistent.ai"></div>
+      <div class="form-group"><input type="text" aria-label="Campo de texto"    id="nombre-whatsapp" value="+58 412 2664528"></div>
       <button class="cta" style="width:100%;max-width:100%;margin:0;">🔗 Conectar Callbell</button>
       <button class="cta-secondary" style="width:100%;max-width:100%;margin:10px 0 0;">📖 Ver Guía</button>
     </div>
@@ -914,8 +914,8 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   <div class="form-container">
     <h3 style="font-family:'Dancing Script',cursive;color:var(--cyan);margin-bottom:1.5rem;font-size:1.8rem;">Enviar Mensaje</h3>
     <form onsubmit="sendContactForm(event)">
-      <div class="form-group"><label for="contact-name">Nombre</label><label class="sr-only">Búsqueda</label><input type="text" aria-label="Campo de texto"    id="contact-name" required></div>
-      <div class="form-group"><label for="contact-email">Correo electrónico</label><label class="sr-only">Email</label><input type="email" aria-label="Correo electrónico"   name="email" id="contact-email" required></div>
+      <div class="form-group"><label for="contact-name">Nombre</label><input type="text" aria-label="Campo de texto"    id="contact-name" required></div>
+      <div class="form-group"><label for="contact-email">Correo electrónico</label><input type="email" aria-label="Correo electrónico"   name="email" id="contact-email" required></div>
       <div class="form-group"><label for="contact-message">Mensaje</label><textarea aria-label="Escribe tu mensaje aquí"   name="mensaje"  id="contact-message" style="height:120px;" required></textarea></div>
       <button type="submit" class="cta" style="width:100%;max-width:100%;margin:0;">Enviar Mensaje</button>
     </form>
@@ -937,12 +937,12 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   </div>
   <div class="ai-selector">
     <label for="select-ia">Selecciona tu IA:</label>
-    <label class="sr-only">Opción</label><select aria-label="Seleccionar opción"    id="chat-provider" aria-label="Proveedor de chat" onchange="updateChatModels()" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;">
+    <select id="chat-provider" aria-label="Proveedor de chat" onchange="updateChatModels()" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;">
       <option value="groq">⚡ Groq</option>
       <option value="openrouter">🌐 OpenRouter</option>
       <option value="github">🐙 GitHub Models</option>
     </select>
-    <label class="sr-only">Opción</label><select aria-label="Seleccionar opción"    id="chat-model" aria-label="Modelo de chat" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;">
+    <select id="chat-model" aria-label="Modelo de chat" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;">
       <option value="">Selecciona un modelo</option>
     </select>
   </div>

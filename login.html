@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta property="fb:app_id" content="3036760793195313" />
+    <title>Synapse AI - Login con Facebook</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; text-align: center; background: #f0f2f5; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        button { background: #1877f2; color: white; border: none; padding: 12px 24px; font-size: 18px; border-radius: 6px; cursor: pointer; }
+        button:hover { background: #166fe5; }
+        #token { word-break: break-all; background: #f0f0f0; padding: 10px; border-radius: 6px; font-size: 12px; margin-top: 15px; }
+        .status { padding: 10px; border-radius: 6px; margin-top: 10px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .back-link { display: block; margin-top: 20px; color: #1877f2; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🚀 Synapse AI</h1>
+        <p>Automatización inteligente con IA</p>
+
+        <!-- Botón de login -->
+        <button id="loginBtn">Iniciar sesión con Facebook</button>
+
+        <!-- Área para mostrar el token y publicar -->
+        <div id="tokenArea" style="display:none;">
+            <h3>🔑 Token de acceso</h3>
+            <div id="token"></div>
+            <button id="publicarBtn" style="margin-top:15px;">📤 Publicar mensaje de prueba</button>
+            <div id="mensajeResultado"></div>
+        </div>
+
+        <a href="/" class="back-link">← Volver al inicio</a>
+    </div>
+
+    <!-- SDK de Facebook -->
+    <script async defer crossorigin="anonymous"
+        src="https://connect.facebook.net/es_LA/sdk.js#xfbml=1&version=v25.0&appId=3036760793195313&autoLogAppEvents=1">
+    </script>
+
+    <script>
+        window.onload = function() {
+            const hash = window.location.hash;
+            if (hash) {
+                const params = new URLSearchParams(hash.substring(1));
+                const token = params.get('access_token');
+                if (token) {
+                    document.getElementById('tokenArea').style.display = 'block';
+                    document.getElementById('token').textContent = token;
+                    document.getElementById('loginBtn').style.display = 'none';
+                    localStorage.setItem('fb_token', token);
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                    mostrarMensaje('✅ Sesión iniciada correctamente', 'success');
+                }
+            }
+            const savedToken = localStorage.getItem('fb_token');
+            if (savedToken) {
+                document.getElementById('tokenArea').style.display = 'block';
+                document.getElementById('token').textContent = savedToken;
+                document.getElementById('loginBtn').style.display = 'none';
+                mostrarMensaje('🔁 Token recuperado de sesión anterior', 'success');
+            }
+        };
+
+        document.getElementById('loginBtn').addEventListener('click', function() {
+            const clientId = '3036760793195313';
+            const redirectUri = encodeURIComponent('https://synapse-v1-alpha.vercel.app/login.html');
+            const scope = 'public_profile,email,pages_manage_posts';
+            const url = `https://www.facebook.com/v25.0/dialog/oauth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}`;
+            window.location.href = url;
+        });
+
+        document.getElementById('publicarBtn').addEventListener('click', function() {
+            const token = localStorage.getItem('fb_token');
+            if (!token) {
+                mostrarMensaje('❌ No hay token. Inicia sesión primero.', 'error');
+                return;
+            }
+            const mensaje = 'Hola desde mi DApp con IA 🚀 Publicación automática generada por Synapse.';
+            const url = `https://graph.facebook.com/v25.0/me/feed`;
+
+            fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: mensaje,
+                    access_token: token
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.id) {
+                    mostrarMensaje(`✅ Publicación exitosa. ID: ${data.id}`, 'success');
+                } else {
+                    mostrarMensaje(`❌ Error: ${data.error?.message || 'Desconocido'}`, 'error');
+                }
+            })
+            .catch(err => {
+                mostrarMensaje(`❌ Error de red: ${err.message}`, 'error');
+            });
+        });
+
+        function mostrarMensaje(texto, tipo) {
+            const div = document.getElementById('mensajeResultado');
+            div.textContent = texto;
+            div.className = 'status ' + (tipo === 'success' ? 'success' : 'error');
+            div.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

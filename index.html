@@ -674,6 +674,10 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
     <span style="width:26px; height:2px; background:#c084fc; border-radius:2px; transition:all 0.4s;"></span>
     <span style="width:26px; height:2px; background:#c084fc; border-radius:2px; transition:all 0.4s;"></span>
   </div>
+    <span style="display:block; width:26px; height:2px; background:var(--accent); border-radius:2px; transition:all 0.4s;"></span>
+    <span style="display:block; width:26px; height:2px; background:var(--accent); border-radius:2px; transition:all 0.4s;"></span>
+    <span style="display:block; width:26px; height:2px; background:var(--accent); border-radius:2px; transition:all 0.4s;"></span>
+  </div>
   <div class="nav-btn" id="hamburger" onclick="toggleMobileMenu()" style="display:flex; flex-direction:column; gap:5px; cursor:pointer; z-index:1001; position:relative;">
     <span style="display:block; width:26px; height:2px; background:var(--accent); border-radius:2px; transition:all 0.4s;"></span>
     <span style="display:block; width:26px; height:2px; background:var(--accent); border-radius:2px; transition:all 0.4s;"></span>
@@ -681,6 +685,15 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   </div>
   </header>
 <nav class="mobile-menu" id="mobile-menu" style="display:none; position:fixed; top:75px; left:0; right:0; background:rgba(5,8,24,0.97); backdrop-filter:blur(20px); border-bottom:1px solid rgba(168,85,247,0.2); padding:1.5rem 4%; flex-direction:column; gap:0.5rem; z-index:999; max-height:calc(100vh - 75px); overflow-y:auto;">
+  <a onclick="showSectionMobile('inicio')" style="color:var(--text); text-decoration:none; font-size:1rem; font-weight:500; padding:0.9rem 1rem; border-radius:10px; transition:all 0.3s; display:block; border:1px solid transparent;">🏠 Inicio</a>
+  <a onclick="showSectionMobile('registro')" style="color:var(--text); text-decoration:none; font-size:1rem; font-weight:500; padding:0.9rem 1rem; border-radius:10px; transition:all 0.3s; display:block; border:1px solid transparent;">📝 Registro</a>
+  <a onclick="showSectionMobile('planes')" style="color:var(--text); text-decoration:none; font-size:1rem; font-weight:500; padding:0.9rem 1rem; border-radius:10px; transition:all 0.3s; display:block; border:1px solid transparent;">💎 Planes y Precios</a>
+  <a onclick="showSectionMobile('configuracion')" style="color:var(--text); text-decoration:none; font-size:1rem; font-weight:500; padding:0.9rem 1rem; border-radius:10px; transition:all 0.3s; display:block; border:1px solid transparent;">⚙️ Configuración</a>
+  <a onclick="showSectionMobile('entrenamiento')" style="color:var(--text); text-decoration:none; font-size:1rem; font-weight:500; padding:0.9rem 1rem; border-radius:10px; transition:all 0.3s; display:block; border:1px solid transparent;">🧠 Entrenamiento del Bot</a>
+  <a onclick="showSectionMobile('vincular')" style="color:var(--text); text-decoration:none; font-size:1rem; font-weight:500; padding:0.9rem 1rem; border-radius:10px; transition:all 0.3s; display:block; border:1px solid transparent;">🔗 Vincular Burbuja Chat</a>
+  <a onclick="showSectionMobile('roi')" style="color:var(--text); text-decoration:none; font-size:1rem; font-weight:500; padding:0.9rem 1rem; border-radius:10px; transition:all 0.3s; display:block; border:1px solid transparent;">📊 Calcular ROI</a>
+  <a onclick="showSectionMobile('contactos')" style="color:var(--text); text-decoration:none; font-size:1rem; font-weight:500; padding:0.9rem 1rem; border-radius:10px; transition:all 0.3s; display:block; border:1px solid transparent;">📞 Contactos</a>
+</nav>
   <a onclick="showSectionMobile('inicio')" style="color:var(--text); text-decoration:none; font-size:1rem; font-weight:500; padding:0.9rem 1rem; border-radius:10px; transition:all 0.3s; display:block; border:1px solid transparent;">🏠 Inicio</a>
   <a onclick="showSectionMobile('registro')" style="color:var(--text); text-decoration:none; font-size:1rem; font-weight:500; padding:0.9rem 1rem; border-radius:10px; transition:all 0.3s; display:block; border:1px solid transparent;">📝 Registro</a>
   <a onclick="showSectionMobile('planes')" style="color:var(--text); text-decoration:none; font-size:1rem; font-weight:500; padding:0.9rem 1rem; border-radius:10px; transition:all 0.3s; display:block; border:1px solid transparent;">💎 Planes y Precios</a>

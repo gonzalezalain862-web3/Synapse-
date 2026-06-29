@@ -666,7 +666,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
     <a href="#roi" onclick="showSection('roi'); return false;">ROI</a>
     <a href="#contactos" onclick="showSection('contactos'); return false;">Contactos</a>
   </nav>
-  <div class="nav-btn" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menú de navegación principal" role="button" tabindex="0" role="button" tabindex="0" aria-label="Panel">
+  <div class="nav-btn" id="hamburger" aria-label="Abrir menú" onclick="toggleMobileMenu()" aria-label="Menú de navegación principal" role="button" tabindex="0" role="button" tabindex="0" aria-label="Panel">
     <span></span><span></span><span></span>
   </div>
 </header>
@@ -770,15 +770,15 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
 <section id="configuracion">
   <h2>Configuración</h2>
   <div class="form-container">
-    <div class="form-group"><div for="language">Idioma</div><select id="language" aria-label="Seleccionar"><option value="es">Español</option><option value="en">Inglés</option><option value="pt">Portugués</option></select></div>
+    <div class="form-group"><div for="language">Idioma</div><select id="language" aria-label="Seleccionar" aria-label="Seleccionar opción"><option value="es">Español</option><option value="en">Inglés</option><option value="pt">Portugués</option></select></div>
     <div class="form-group">
       <div>IA por Defecto</div>
-      <select id="config-provider" onchange="updateConfigModels()" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Seleccionar">
+      <select id="config-provider" onchange="updateConfigModels()" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Seleccionar" aria-label="Seleccionar opción">
         <option value="groq">⚡ Groq</option>
         <option value="openrouter">🌐 OpenRouter</option>
         <option value="github">🐙 GitHub Models</option>
       </select>
-      <select id="config-model" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Seleccionar"><option value="llama-3.1-8b-instant">🦙 LLaMA 3.1 8B</option><option value="llama-3.3-70b-versatile">🦙 LLaMA 3.3 70B</option><option value="mixtral-8x7b-32768">🌀 Mixtral 8x7B</option><option value="gemma2-9b-it">💎 Gemma 2 9B</option></select>
+      <select id="config-model" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Seleccionar" aria-label="Seleccionar opción"><option value="llama-3.1-8b-instant">🦙 LLaMA 3.1 8B</option><option value="llama-3.3-70b-versatile">🦙 LLaMA 3.3 70B</option><option value="mixtral-8x7b-32768">🌀 Mixtral 8x7B</option><option value="gemma2-9b-it">💎 Gemma 2 9B</option></select>
       <div style="display:block;margin-top:10px;">API Key (Opcional)</div>
       <input type="password" id="api-key" placeholder="Tu API key aquí" aria-label="Campo">
     </div>
@@ -945,12 +945,12 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
     <button class="close-btn" onclick="toggleChat()">×</button>
   </div>
   <div class="ai-selector">
-    <select id="chat-provider" onchange="updateChatModels()" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Seleccionar">
+    <select id="chat-provider" onchange="updateChatModels()" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Seleccionar" aria-label="Seleccionar opción">
       <option value="groq">⚡ Groq</option>
       <option value="openrouter">🌐 OpenRouter</option>
       <option value="github">🐙 GitHub Models</option>
     </select>
-    <select id="chat-model" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Seleccionar"><option value="llama-3.1-8b-instant">🦙 LLaMA 3.1 8B</option><option value="llama-3.3-70b-versatile">🦙 LLaMA 3.3 70B</option><option value="mixtral-8x7b-32768">🌀 Mixtral 8x7B</option><option value="gemma2-9b-it">💎 Gemma 2 9B</option></select>
+    <select id="chat-model" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Seleccionar" aria-label="Seleccionar opción"><option value="llama-3.1-8b-instant">🦙 LLaMA 3.1 8B</option><option value="llama-3.3-70b-versatile">🦙 LLaMA 3.3 70B</option><option value="mixtral-8x7b-32768">🌀 Mixtral 8x7B</option><option value="gemma2-9b-it">💎 Gemma 2 9B</option></select>
   </div>
   <div class="conversaciones-container" id="chat-messages"></div>
 <div class="chat-input-area" style="padding-bottom: 25px;">

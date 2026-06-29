@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "routes": [
+    { "src": "/logo-neon.svg", "dest": "/logo-neon.svg" },
+    { "src": "/(.*)", "dest": "/" }
+  ]
+}

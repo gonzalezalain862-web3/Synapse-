@@ -1377,4 +1377,47 @@ document.addEventListener('DOMContentLoaded', function() {
     line-height: 1.5 !important;
 }
 </style>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    /* 1. Corregir "Empty button" del menú hamburguesa */
+    const hmBtn = document.getElementById("hamburger") || document.querySelector(".nav-btn");
+    if (hmBtn) {
+        hmBtn.setAttribute("aria-label", "Menú de navegación");
+        hmBtn.setAttribute("role", "button");
+        hmBtn.setAttribute("tabindex", "0");
+    }
+    
+    /* 2. Corregir "Missing form labels" de forma quirúrgica por IDs existentes */
+    const inputs = [
+        { id: "email", label: "Correo electrónico de registro" },
+        { id: "password", label: "Contraseña de ingreso" },
+        { id: "confirm-password", label: "Confirmación de contraseña" },
+        { id: "bot-name", label: "Nombre de la inteligencia artificial" },
+        { id: "email-callbell", label: "Correo electrónico para Callbell" },
+        { id: "nombre", label: "Clave de API de integración" },
+        { id: "nombre-bot", label: "Identificador del Bot" },
+        { id: "nombre-whatsapp", label: "Número telefónico de enlace" },
+        { id: "monthly-revenue", label: "Cálculo de ingresos mensuales" },
+        { id: "support-cost", label: "Costos de soporte actuales" },
+        { id: "assistent-cost", label: "Costo del plan contratado" },
+        { id: "contact-name", label: "Nombre del remitente de contacto" },
+        { id: "contact-email", label: "Email del remitente de contacto" },
+        { id: "op4-portal-id", label: "Identificador numérico del portal" }
+    ];
+    inputs.forEach(item => {
+        const el = document.getElementById(item.id);
+        if (el && !el.hasAttribute("aria-label")) el.setAttribute("aria-label", item.label);
+    });
+    
+    /* 3. Corregir selectores sin etiqueta asociando un rol claro */
+    document.querySelectorAll("select").forEach((sel, idx) => {
+        if (!sel.hasAttribute("aria-label")) sel.setAttribute("aria-label", "Seleccionar opción de configuración " + (idx + 1));
+    });
+    
+    /* 4. Corregir áreas de texto (textareas) */
+    document.querySelectorAll("textarea").forEach(tx => {
+        if (!tx.hasAttribute("aria-label")) tx.setAttribute("aria-label", "Área de introducción de texto");
+    });
+});
+</script>
 </body></html>

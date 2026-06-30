@@ -547,6 +547,19 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   .vincular-drawer { width:280px; }
   .hero-features { grid-template-columns: repeat(2, 1fr); }
 }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 </style>
 <style>
   #send-btn {
@@ -563,6 +576,19 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
     margin-bottom: 10px !important;
     z-index: 10000 !important;
   }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 </style>
     <meta name="google-site-verification" content="FAr-Dht8AqD9aDxJy1UT7ZzeTA8FRenQszYKkccTetU" />
   <meta name="description" content="Automatiza la atención al cliente 24/7 con Synapse AI. Reduce costos un 70%, captura leads y acepta pagos con USDC. ¡Pruébalo gratis!"> 
@@ -610,28 +636,28 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
     <h3>🔗 Vincular Chat</h3>
     <p>Selecciona una opción de integración</p>
   </div>
-  <div class="vd-item active" id="vdi-1" onclick="selectVSub(1)" role="button" tabindex="0">
+  <div class="vd-item" active" id="vdi-1" role="button" tabindex="0" onclick="selectVSub(1)" role="button" tabindex="0">
     <div class="vd-icon">🌐</div>
     <div class="vd-text"><strong>Sitio Web</strong><span>Widget directo en tu página</span></div>
   </div>
-  <div class="vd-item" id="vdi-2" onclick="selectVSub(2)" role="button" tabindex="0">
+  <div class="vd-item"" id="vdi-2" role="button" tabindex="0" onclick="selectVSub(2)" role="button" tabindex="0">
     <div class="vd-icon">📱</div>
     <div class="vd-text"><strong>Redes Sociales</strong><span>WhatsApp, Instagram, Facebook</span></div>
   </div>
-  <div class="vd-item" id="vdi-3" onclick="selectVSub(3)" role="button" tabindex="0">
+  <div class="vd-item"" id="vdi-3" role="button" tabindex="0" onclick="selectVSub(3)" role="button" tabindex="0">
     <div class="vd-icon">🏢</div>
     <div class="vd-text"><strong>HubSpot CRM</strong><span>Leads automáticos al CRM gratis</span></div>
   </div>
-  <div class="vd-item" id="vdi-4" onclick="selectVSub(4)" role="button" tabindex="0">
+  <div class="vd-item"" id="vdi-4" role="button" tabindex="0" onclick="selectVSub(4)" role="button" tabindex="0">
     <div class="vd-icon">📢</div>
     <div class="vd-text"><strong>Anuncios + HubSpot</strong><span>Google, Facebook, TikTok Ads</span></div>
   </div>
 </div>
 
 <header>
-  <div class="logo-container" onclick="showSection('inicio')" role="button" tabindex="0">
+  <div class="logo-container" role="button" tabindex="0" onclick="showSection('inicio')" role="button" tabindex="0">
   <div class="logo-icon">
-    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiB3aWR0aD0iODAiIGhlaWdodD0iODAiPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJuZW9uR3JhZCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiM3YzNhZWQiIC8+CiAgICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjYzA4NGZjIiAvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMyMmQzZWUiIC8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGZpbHRlciBpZD0ibmVvbkdsb3ciIHg9Ii01MCUiIHk9Ii01MCUiIHdpZHRoPSIyMDAlIiBoZWlnaHQ9IjIwMCUiPgogICAgICA8ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSI2IiByZXN1bHQ9ImJsdXIiIC8+CiAgICAgIDxmZU1lcmdlPgogICAgICAgIDxmZU1lcmdlTm9kZSBpbj0iYmx1ciIgLz4KICAgICAgICA8ZmVNZXJnZU5vZGUgaW49IlNvdXJjZUdyYXBoaWMiIC8+CiAgICAgIDwvZmVNZXJnZT4KICAgIDwvZmlsdGVyPgogIDwvZGVmcz4KICA8cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgcng9IjMwIiBmaWxsPSIjMGEwZjI4IiBzdHJva2U9InVybCgjbmVvbkdyYWQpIiBzdHJva2Utd2lkdGg9IjQiIGZpbHRlcj0idXJsKCNuZW9uR2xvdykiIC8+CiAgPHRleHQgeD0iMTAwIiB5PSI1NSIgZm9udC1zaXplPSIxOCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2Q0YWYzNyIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXdlaWdodD0iYm9sZCIgZmlsdGVyPSJ1cmwoI25lb25HbG93KSI+SU5URUdSQVRJT048L3RleHQ+CiAgPHRleHQgeD0iMTAwIiB5PSIxMDUiIGZvbnQtc2l6ZT0iMjgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9InVybCgjbmVvbkdyYWQpIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWx0ZXI9InVybCgjbmVvbkdsb3cpIj5BSSBDT1JFPC90ZXh0PgogIDx0ZXh0IHg9IjEwMCIgeT0iMTQ1IiBmb250LXNpemU9IjE0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjYTViNGZjIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtd2VpZ2h0PSJib2xkIj4yNC83IEFWQUlMQUJJTElUWTwvdGV4dD4KICA8bGluZSB4MT0iNDAiIHkxPSIxNjUiIHgyPSIxNjAiIHkyPSIxNjUiIHN0cm9rZT0iI2Q0YWYzNyIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1vcGFjaXR5PSIwLjYiLz4KPC9zdmc+Cg==" alt="Logo Synapse AI" style="width:100%; height:100%;">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiB3aWR0aD0iODAiIGhlaWdodD0iODAiPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJuZW9uR3JhZCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiM3YzNhZWQiIC8+CiAgICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjYzA4NGZjIiAvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMyMmQzZWUiIC8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGZpbHRlciBpZD0ibmVvbkdsb3ciIHg9Ii01MCUiIHk9Ii01MCUiIHdpZHRoPSIyMDAlIiBoZWlnaHQ9IjIwMCUiPgogICAgICA8ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSI2IiByZXN1bHQ9ImJsdXIiIC8+CiAgICAgIDxmZU1lcmdlPgogICAgICAgIDxmZU1lcmdlTm9kZSBpbj0iYmx1ciIgLz4KICAgICAgICA8ZmVNZXJnZU5vZGUgaW49IlNvdXJjZUdyYXBoaWMiIC8+CiAgICAgIDwvZmVNZXJnZT4KICAgIDwvZmlsdGVyPgogIDwvZGVmcz4KICA8cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgcng9IjMwIiBmaWxsPSIjMGEwZjI4IiBzdHJva2U9InVybCgjbmVvbkdyYWQpIiBzdHJva2Utd2lkdGg9IjQiIGZpbHRlcj0idXJsKCNuZW9uR2xvdykiIC8+CiAgPHRleHQgeD0iMTAwIiB5PSI1NSIgZm9udC1zaXplPSIxOCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2Q0YWYzNyIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXdlaWdodD0iYm9sZCIgZmlsdGVyPSJ1cmwoI25lb25HbG93KSI+SU5URUdSQVRJT048L3RleHQ+CiAgPHRleHQgeD0iMTAwIiB5PSIxMDUiIGZvbnQtc2l6ZT0iMjgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9InVybCgjbmVvbkdyYWQpIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWx0ZXI9InVybCgjbmVvbkdsb3cpIj5BSSBDT1JFPC90ZXh0PgogIDx0ZXh0IHg9IjEwMCIgeT0iMTQ1IiBmb250LXNpemU9IjE0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjYTViNGZjIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtd2VpZ2h0PSJib2xkIj4yNC83IEFWQUlMQUJJTElUWTwvdGV4dD4KICA8bGluZSB4MT0iNDAiIHkxPSIxNjUiIHgyPSIxNjAiIHkyPSIxNjUiIHN0cm9rZT0iI2Q0YWYzNyIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1vcGFjaXR5PSIwLjYiLz4KPC9zdmc+Cg==" alt="" style="width:100%; height:100%;">
   </div>
     <div class="logo-text">
       <span class="logo-main">Assistent.ai</span>
@@ -753,14 +779,18 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
 <section id="configuracion">
   <h2>Configuración</h2>
   <div class="form-container">
-    <div class="form-group"><label for="language">Idioma</div><select id="language" aria-label="Opción"><option value="es">Español</option><option value="en">Inglés</option><option value="pt">Portugués</option></select></div>
+    <div class="form-group"><label for="language">Idioma</label>
+      <label for="language" class="sr-only">Idioma</label>
+      <select id="language" aria-label="Opción"><option value="es">Español</option><option value="en">Inglés</option><option value="pt">Portugués</option></select></div>
     <div class="form-group">
-      <div>IA por Defecto</div>
+      <div>IA por Defecto</label>
+      <label for="config-provider" class="sr-only">Proveedor de IA</label>
       <select id="config-provider" onchange="updateConfigModels()" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Opción">
         <option value="groq">⚡ Groq</option>
         <option value="openrouter">🌐 OpenRouter</option>
         <option value="github">🐙 GitHub Models</option>
       </select>
+      <label for="config-model" class="sr-only">Modelo de IA</label>
       <select id="config-model" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Opción">
         <option value="">Selecciona un modelo</option>
       </select>
@@ -776,9 +806,11 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   <p>Personaliza tu bot con información de tu negocio para respuestas más precisas</p>
   <div class="form-container">
     <div class="form-group"><label for="bot-name">Nombre del Bot</label><input type="text" id="bot-name" placeholder="Mi Bot Inteligente" aria-label="Campo"></div>
-    <div class="form-group"><label for="bot-description">Descripción</div><textarea id="bot-description" placeholder="¿Qué hace tu bot?" style="height:100px;"></textarea></div>
+    <div class="form-group"><label for="bot-description">Descripción</label>
+      <textarea id="bot-description" placeholder="¿Qué hace tu bot?" style="height:100px;"></textarea></div>
     <div class="form-group"><label for="training-file">Cargar Archivo de Entrenamiento</label><input type="file" id="training-file" accept=".txt,.pdf,.csv" aria-label="Campo"></div>
-    <div class="form-group"><label for="context">Contexto del Bot</div><textarea id="context" placeholder="Instrucciones especiales para tu bot..." style="height:120px;"></textarea></div>
+    <div class="form-group"><label for="context">Contexto del Bot</label>
+      <textarea id="context" placeholder="Instrucciones especiales para tu bot..." style="height:120px;"></textarea></div>
     <button class="cta" onclick="trainBot()" style="width:100%;max-width:100%;margin:0;">🧠 Entrenar Bot</button>
   </div>
 </section>
@@ -797,7 +829,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
     <div class="form-container" style="margin:1.5rem 0;">
       <span class="vc-label">Código del widget:</span>
       <div class="vc-code"><pre id="vc1-code">&lt;script src="https://assistent.ai/chatwidget.js"&gt;&lt;/script&gt;</pre></div>
-      <button class="vc-copy" onclick="vcCopiar('vc1-code', this)">📋 Copiar código</button>
+      <button class="vc-copy" aria-label="Copiar código" onclick="vcCopiar('vc1-code', this)">📋 Copiar código</button>
       <div class="vc-success"><p>✓ Se instala en cualquier sitio HTML &nbsp;·&nbsp; ✓ Activación inmediata &nbsp;·&nbsp; ✓ Responsive</p></div>
     </div>
   </div>
@@ -819,7 +851,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
     <div class="form-container" style="margin:1.5rem 0;">
       <span class="vc-label">① Tracking HubSpot (Portal ID: 50512145)</span>
       <div class="vc-code"><pre id="vc3-tracking">&lt;script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/50512145.js"&gt;&lt;/script&gt;</pre></div>
-      <button class="vc-copy" onclick="vcCopiar('vc3-tracking', this)">📋 Copiar código ①</button>
+      <button class="vc-copy" aria-label="Copiar código" onclick="vcCopiar('vc3-tracking', this)">📋 Copiar código ①</button>
       <span class="vc-label">② Burbuja Chat IA de Assistent.ai</span>
       <div class="vc-code"><pre id="vc3-bubble">&lt;script&gt;
  window.AssistentConfig = {
@@ -831,7 +863,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
  };
 &lt;/script&gt;
 &lt;script async src="https://cdn.assistent.ai/widget/v2/bubble.min.js"&gt;&lt;/script&gt;</pre></div>
-      <button class="vc-copy" onclick="vcCopiar('vc3-bubble', this)">📋 Copiar código ②</button>
+      <button class="vc-copy" aria-label="Copiar código" onclick="vcCopiar('vc3-bubble', this)">📋 Copiar código ②</button>
       <div class="vc-success" style="margin-top:1rem;"><p>✓ Burbuja IA 24/7 en tu landing<br>✓ Leads al CRM automáticamente<br>✓ Gratis con HubSpot Free</p></div>
     </div>
   </div>
@@ -843,15 +875,15 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
       <p style="color:var(--cyan);font-size:0.85rem;font-weight:600;margin-bottom:0.6rem;">Compatible con:</p>
       <div class="op4-badges"><span class="op4-badge">🔍 Google Ads</span><span class="op4-badge">📘 Facebook Ads</span><span class="op4-badge">📸 Instagram Ads</span><span class="op4-badge">💼 LinkedIn Ads</span><span class="op4-badge">🎵 TikTok Ads</span></div>
       <p style="color:var(--cyan);font-size:0.9rem;font-weight:600;margin-bottom:0.5rem;">Tu Portal ID de HubSpot:</p>
-      <div class="op4-portal-row"><input type="text" id="op4-portal-id" placeholder="Ej: 50512145" value="50512145" aria-label="Campo"><button class="op4-gen-btn" onclick="generarCodigosOP4()">⚡ Generar</button></div>
+      <div class="op4-portal-row"><input type="text" id="op4-portal-id" placeholder="Ej: 50512145" value="50512145" aria-label="Campo"><button class="op4-gen-btn" aria-label="Generar códigos" onclick="generarCodigosOP4()">⚡ Generar</button></div>
       <p style="color:var(--muted);font-size:0.78rem;margin-bottom:1rem;">HubSpot → Configuración → Cuenta → Portal ID &nbsp;|&nbsp; <a href="https://app.hubspot.com/signup-hubspot/crm" target="_blank" style="color:var(--cyan);text-decoration:none;">Crear cuenta gratis →</a></p>
       <div id="op4-output" style="display:none;">
         <span class="vc-label">① Código Tracking HubSpot (pega primero):</span>
         <div class="vc-code"><pre id="op4-code-tracking"></pre></div>
-        <button class="vc-copy" onclick="vcCopiar('op4-code-tracking', this)">📋 Copiar código ①</button>
+        <button class="vc-copy" aria-label="Copiar código" onclick="vcCopiar('op4-code-tracking', this)">📋 Copiar código ①</button>
         <span class="vc-label">② Burbuja Chat IA (pega segundo):</span>
         <div class="vc-code"><pre id="op4-code-bubble"></pre></div>
-        <button class="vc-copy" onclick="vcCopiar('op4-code-bubble', this)">📋 Copiar código ②</button>
+        <button class="vc-copy" aria-label="Copiar código" onclick="vcCopiar('op4-code-bubble', this)">📋 Copiar código ②</button>
         <div class="vc-success" style="margin-top:1rem;"><p>✓ Burbuja flotante IA 24/7 activa en tus anuncios<br>✓ Leads directo a HubSpot CRM automáticamente<br>✓ 100% gratis con HubSpot Free</p></div>
       </div>
     </div>
@@ -909,7 +941,8 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
     <form onsubmit="sendContactForm(event)">
       <div class="form-group"><label for="contact-name">Nombre</label><input type="text" id="contact-name" required aria-label="Campo"></div>
       <div class="form-group"><label for="contact-email">Email</label><input type="email" id="contact-email" required aria-label="Campo"></div>
-      <div class="form-group"><label for="contact-message">Mensaje</div><textarea id="contact-message" style="height:120px;" required></textarea></div>
+      <div class="form-group"><label for="contact-message">Mensaje</label>
+      <textarea id="contact-message" style="height:120px;" required></textarea></div>
       <button type="submit" class="cta" style="width:100%;max-width:100%;margin:0;">Enviar Mensaje</button>
     </form>
   </div>
@@ -929,12 +962,14 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
     <button class="close-btn" onclick="toggleChat()">×</button>
   </div>
   <div class="ai-selector">
-    <select id="chat-provider" onchange="updateChatModels()" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Opción">
+    <label for="chat-provider" class="sr-only">Proveedor de Chat</label>
+      <select id="chat-provider" onchange="updateChatModels()" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Opción">
       <option value="groq">⚡ Groq</option>
       <option value="openrouter">🌐 OpenRouter</option>
       <option value="github">🐙 GitHub Models</option>
     </select>
-    <select id="chat-model" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Opción">
+    <label for="chat-model" class="sr-only">Modelo de Chat</label>
+      <select id="chat-model" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Opción">
       <option value="">Selecciona un modelo</option>
     </select>
   </div>
@@ -1265,6 +1300,19 @@ document.addEventListener('DOMContentLoaded', function() {
         padding-bottom: 20px !important;
     }
 }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 </style>
 <script>
 (function() {
@@ -1362,4 +1410,17 @@ document.addEventListener('DOMContentLoaded', function() {
     font-size: 14px !important;
     line-height: 1.5 !important;
 }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 </style>

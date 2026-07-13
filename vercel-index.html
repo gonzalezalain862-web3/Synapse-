@@ -972,7 +972,6 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
 </div>
 
 <script>
-const GROQ_API_KEY = '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';
 const GEMINI_API_KEY = 'AIzaSyAf3tHjAeJROzXqIpJOix6iEjhq7OfNHHM';
 const OWNER_WALLET = '0x5572905245624E6cC5116F444c019ddc47F87829';
 const USDC_POLYGON = '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174';
@@ -1050,7 +1049,6 @@ function addMessage(sender, text) {
 async function fetchGroq(msg) {
   const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+GROQ_API_KEY },
     body: JSON.stringify({ model: 'llama-3.1-8b-instant', messages: [{ role: 'system', content: SYSTEM_PROMPT }, { role: 'user', content: msg }], temperature: 0.8, max_tokens: 500 })
   });
   if (!r.ok) throw new Error('Error de Groq API ('+r.status+')');

@@ -1145,6 +1145,7 @@ function setStatus(msg, cls) {
   el.className = cls;
 }
 async function connectMetaMask() {
+  fbq("track", "AddPaymentInfo", { value: 29, currency: "USD" });
   if (typeof window.ethereum === 'undefined') { showWalletModal(); return; }
   try {
     setStatus('🔓 Conectando wallet...', 'pending');

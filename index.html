@@ -1128,6 +1128,8 @@ async function sendMessage() {
   if (sendBtn) sendBtn.disabled = false;
 }
 function selectPlan(plan) {
+  const prices = { basico: 29, pro: 55 };
+  fbq("track", "InitiateCheckout", { value: prices[plan], currency: "USD", content_name: plan === "basico" ? "Plan Básico" : "Plan Pro", content_category: "Suscripción" });
   selectedPlan = plan;
   const names = { basico: 'Básico — $29 USDC/mes', pro: 'Pro — $55 USDC/mes' };
   document.getElementById('plan-details').textContent = '📦 Plan seleccionado: '+names[plan];
@@ -1176,9 +1178,11 @@ async function connectMetaMask() {
   }
 }
 function handleRegister(e) { e.preventDefault(); alert('✅ Registro completado.'); showSection('planes'); }
+  fbq("track", "Lead", { content_name: "Registro", content_category: "Usuario" });
 function saveConfiguration() { alert('✅ Configuración guardada'); }
 function trainBot() { alert('✅ Bot entrenado correctamente'); }
 function sendContactForm(e) { e.preventDefault(); alert('✅ Mensaje enviado.'); e.target.reset(); }
+  fbq("track", "Contact", { content_name: "Formulario de contacto", content_category: "Mensaje" });
 function calculateROI() {
   const sc = parseFloat(document.getElementById('support-cost').value);
   const ac = parseFloat(document.getElementById('assistent-cost').value);

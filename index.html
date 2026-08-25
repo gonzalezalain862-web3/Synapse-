@@ -1402,12 +1402,10 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById("user-name").innerText = user.name;
       document.getElementById("user-email").innerText = user.email || "Correo no disponible";
       document.getElementById("user-picture").src = user.picture.data.url;
-      var btn = document.querySelector(".fb-login-button");
       if (btn) btn.style.display = "none";
       console.log("Usuario:", user);
     });
   }
-    var btn = document.querySelector(".fb-login-button");
     if (btn) btn.style.display = "inline-block";
   }
   (function(d, s, id) {
@@ -1421,6 +1419,22 @@ document.addEventListener('DOMContentLoaded', function() {
   <img id="user-picture" src="" alt="Foto" style="border-radius:50%; width:80px;">
   <h2 id="user-name"></h2>
   <p id="user-email"></p>
+</div>
+<script>
+</script>
+<div id="user-info" style="display:none; text-align:center; margin:20px;">
+  <img id="user-picture" src="" alt="Foto" style="border-radius:50%; width:80px;">
+  <h2 id="user-name"></h2>
+  <p id="user-email"></p>
+  <button onclick="logout()">Cerrar sesión</button>
+</div>
+<script>
+</script>
+<div id="user-info" style="display:none; text-align:center; margin:20px;">
+  <img id="user-picture" src="" alt="Foto" style="border-radius:50%; width:80px;">
+  <h2 id="user-name"></h2>
+  <p id="user-email"></p>
+  <button onclick="logout()">Cerrar sesión</button>
 </div>
 <script>
 </script>
@@ -1464,14 +1478,12 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById("user-email").innerText = user.email || "Correo no disponible";
       document.getElementById("user-picture").src = user.picture.data.url;
       document.getElementById("user-info").style.display = "block";
-      var btn = document.querySelector(".fb-login-button");
       if (btn) btn.style.display = "none";
       console.log("Usuario:", user);
     });
   };
   function hideUserInfo() {
     document.getElementById("user-info").style.display = "none";
-    var btn = document.querySelector(".fb-login-button");
     if (btn) btn.style.display = "inline-block";
   };
   function logout() {

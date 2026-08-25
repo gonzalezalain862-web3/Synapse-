@@ -1129,7 +1129,7 @@ async function sendMessage() {
 }
 function selectPlan(plan) {
   const prices = { basico: 29, pro: 55 };
-  fbq("track", "InitiateCheckout", { value: prices[plan], currency: "USD", content_name: plan === "basico" ? "Plan Básico" : "Plan Pro", content_category: "Suscripción" });
+  sendToCAPI("InitiateCheckout", { value: prices[plan], currency: "USD", content_name: plan === "basico" ? "Plan Básico" : "Plan Pro", content_category: "Suscripción" }, {});
   selectedPlan = plan;
   const names = { basico: 'Básico — $29 USDC/mes', pro: 'Pro — $55 USDC/mes' };
   document.getElementById('plan-details').textContent = '📦 Plan seleccionado: '+names[plan];
@@ -1179,11 +1179,11 @@ async function connectMetaMask() {
   }
 }
 function handleRegister(e) { e.preventDefault(); alert('✅ Registro completado.'); showSection('planes'); }
-  fbq("track", "Lead", { content_name: "Registro", content_category: "Usuario" });
+  sendToCAPI("Lead", { content_name: "Registro", content_category: "Usuario" }, { email: document.getElementById("email").value });
 function saveConfiguration() { alert('✅ Configuración guardada'); }
 function trainBot() { alert('✅ Bot entrenado correctamente'); }
 function sendContactForm(e) { e.preventDefault(); alert('✅ Mensaje enviado.'); e.target.reset(); }
-  fbq("track", "Contact", { content_name: "Formulario de contacto", content_category: "Mensaje" });
+  sendToCAPI("Contact", { content_name: "Formulario de contacto", content_category: "Mensaje" }, { email: document.getElementById("contact-email").value });
 function calculateROI() {
   const sc = parseFloat(document.getElementById('support-cost').value);
   const ac = parseFloat(document.getElementById('assistent-cost').value);
@@ -1419,4 +1419,53 @@ document.addEventListener('DOMContentLoaded', function() {
     line-height: 1.5 !important;
 }
 </style>
+<script>
+  async function sendToCAPI(eventName, customData, userData) {
+    try {
+      const response = await fetch("/api/facebook", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          event_name: eventName,
+          event_data: { custom_data: customData },
+          user_data: userData || {}
+        })
+      });
+      if (!response.ok) throw new Error("CAPI error");
+      console.log("✅ Evento enviado a CAPI:", eventName);
+    } catch (e) {
+      console.warn("⚠️ CAPI falló, usando Pixel como fallback:", e.message);
+      fbq("track", eventName, customData);
+    }
+  }
+</script>
+<!-- Botón de Facebook -->
+<div class="fb-login-button" data-width="" data-size="large" data-button-type="continue_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="false"></div>
+
+<!-- SDK de Facebook -->
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : "1102940255740694",
+      cookie     : true,
+      xfbml      : true,
+      version    : "v22.0"
+    });
+    FB.AppEvents.logPageView();
+    FB.getLoginStatus(function(response) {
+      if (response.status === "connected") {
+        FB.api("/me?fields=id,name,email,picture", function(user) {
+          console.log("Usuario logueado:", user);
+        });
+      }
+    });
+  };
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "https://connect.facebook.net/es_ES/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, "script", "facebook-jssdk"));
+</script>
 </body></html>

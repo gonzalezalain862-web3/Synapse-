@@ -1457,6 +1457,40 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
   window.fbAsyncInit = function() {
     FB.init({
+
+  function checkLoginState() {
+    FB.getLoginStatus(function(response) {
+      if (response.status === "connected") {
+        showUserInfo();
+      } else {
+        hideUserInfo();
+      }
+    });
+  }
+
+  function showUserInfo() {
+    FB.api("/me?fields=id,name,email,picture.width(200)", function(user) {
+      document.getElementById("user-name").innerText = user.name;
+      document.getElementById("user-email").innerText = user.email || "Correo no disponible";
+      document.getElementById("user-picture").src = user.picture.data.url;
+      document.getElementById("user-info").style.display = "block";
+      var btn = document.querySelector(".fb-login-button");
+      if (btn) btn.style.display = "none";
+      console.log("Usuario logueado:", user);
+    });
+  }
+
+  function hideUserInfo() {
+    document.getElementById("user-info").style.display = "none";
+    var btn = document.querySelector(".fb-login-button");
+    if (btn) btn.style.display = "inline-block";
+  }
+
+  function logout() {
+    FB.logout(function(response) {
+      hideUserInfo();
+    });
+  }
       appId      : "1102940255740694",
       cookie     : true,
       xfbml      : true,

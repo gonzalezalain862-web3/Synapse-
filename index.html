@@ -1394,10 +1394,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
     FB.init({ appId: "1102940255740694", cookie: true, xfbml: true, version: "v22.0" });
     FB.AppEvents.logPageView();
-  };
     FB.getLoginStatus(function(response) {
-    });
-  }
     FB.api("/me?fields=id,name,email,picture.width(200)", function(user) {
       document.getElementById("user-name").innerText = user.name;
       document.getElementById("user-email").innerText = user.email || "Correo no disponible";
@@ -1405,9 +1402,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (btn) btn.style.display = "none";
       console.log("Usuario:", user);
     });
-  }
-    if (btn) btn.style.display = "inline-block";
-  }
+  });
   (function(d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) return;

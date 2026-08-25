@@ -596,6 +596,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   <link rel="canonical" href="https://synapse-v1-alpha.vercel.app/">
 </head>
 <body>
+<div class="fb-login-button" data-scope="public_profile,email" data-width="" data-size="large" data-button-type="continue_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="false"></div>
 <!-- Botón de Facebook -->
 <div style="text-align:center; margin:20px;">
 </div>
@@ -1422,12 +1423,32 @@ document.addEventListener('DOMContentLoaded', function() {
   <p id="user-email"></p>
 </div>
 <script>
+</script>
+<div id="user-info" style="display:none; text-align:center; margin:20px;">
+  <img id="user-picture" src="" alt="Foto" style="border-radius:50%; width:80px;">
+  <h2 id="user-name"></h2>
+  <p id="user-email"></p>
+  <button onclick="logout()">Cerrar sesión</button>
+</div>
+<script>
+</script>
+<div id="user-info" style="display:none; text-align:center; margin:20px;">
+  <img id="user-picture" src="" alt="Foto" style="border-radius:50%; width:80px;">
+  <h2 id="user-name"></h2>
+  <p id="user-email"></p>
+  <button onclick="logout()">Cerrar sesión</button>
+</div>
+<script>
   window.fbAsyncInit = function() {
-    FB.init({ appId: "1102940255740694", cookie: true, xfbml: true, version: "v22.0" });
+    FB.init({
+      appId: "1102940255740694",
+      cookie: true,
+      xfbml: true,
+      version: "v22.0"
+    });
     FB.AppEvents.logPageView();
     checkLoginState();
   };
-
   function checkLoginState() {
     FB.getLoginStatus(function(response) {
       if (response.status === "connected") {
@@ -1436,8 +1457,7 @@ document.addEventListener('DOMContentLoaded', function() {
         hideUserInfo();
       }
     });
-  }
-
+  };
   function showUserInfo() {
     FB.api("/me?fields=id,name,email,picture.width(200)", function(user) {
       document.getElementById("user-name").innerText = user.name;
@@ -1448,20 +1468,17 @@ document.addEventListener('DOMContentLoaded', function() {
       if (btn) btn.style.display = "none";
       console.log("Usuario:", user);
     });
-  }
-
+  };
   function hideUserInfo() {
     document.getElementById("user-info").style.display = "none";
     var btn = document.querySelector(".fb-login-button");
     if (btn) btn.style.display = "inline-block";
-  }
-
+  };
   function logout() {
     FB.logout(function(response) {
       hideUserInfo();
     });
-  }
-
+  };
   (function(d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) return;

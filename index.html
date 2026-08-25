@@ -596,7 +596,6 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   <link rel="canonical" href="https://synapse-v1-alpha.vercel.app/">
 </head>
 <body>
-<div class="fb-login-button" data-scope="public_profile,email" data-width="" data-size="large" data-button-type="continue_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="false"></div>
 <!-- Botón de Facebook -->
 <div style="text-align:center; margin:20px;">
 </div>
@@ -1462,5 +1461,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     FB.AppEvents.logPageView();
     checkLoginState();
+  
   };
-  function checkLoginState() {
+</script>
+
+<div style="display: flex; justify-content: center; margin-top: 40px; padding-bottom: 30px;"><div class="fb-login-button" data-scope="public_profile,email" data-width="" data-size="large" data-button-type="continue_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="false"></div></div>
+
+</body>
+</html>

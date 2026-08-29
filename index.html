@@ -1386,10 +1386,10 @@ document.addEventListener('DOMContentLoaded', function() {
       if (response.status === "connected") {
         FB.api("/me?fields=id,name,email,picture.width(200)", function(user) {
           if (user && !user.error) {
-            document.getElementById("user-name").innerText = user.name;
-            document.getElementById("user-email").innerText = user.email || "Correo no disponible";
-            document.getElementById("user-picture").src = user.picture.data.url;
-            if (btn) btn.style.display = "none";
+            var nameEl = document.getElementById("user-name"); if (nameEl) nameEl.innerText = user.name;
+            var emailEl = document.getElementById("user-email"); if (emailEl) emailEl.innerText = user.email || "Correo no disponible";
+            var picEl = document.getElementById("user-picture"); if (picEl) picEl.src = user.picture.data.url;
+            if (btn) btn.style.display = "none"; document.getElementById("user-profile").style.display = "block";
       const supabase = supabase.createClient("https://oqzdocxkzzgdpxlibhkw.supabase.com/", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xemRvY3hrenpnZHB4bGliaGt3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwMTI0MjIsImV4cCI6MjEwMzU4ODQyMn0.vjrdXb6x_ZOkoiA2_ds7MGR2_hYAwYsrOgfHUgupEXM");
       const userId = user.id;
       localStorage.setItem("fb_user_id", userId);
@@ -1417,7 +1417,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }(document, "script", "facebook-jssdk"));
 </script>
 
-<div style="display: flex; justify-content: center; margin-top: 40px; padding-bottom: 30px;"><div class="fb-login-button" data-scope="public_profile,email" data-width="" data-size="large" data-button-type="continue_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="false"></div></div>
+<div id="user-profile" style="display: none; text-align: center; margin-bottom: 20px;"><img id="user-picture" src="" style="width: 50px; height: 50px; border-radius: 50%;"><h3 id="user-name"></h3><p id="user-email"></p></div><div style="display: flex; justify-content: center; margin-top: 40px; padding-bottom: 30px;"><div class="fb-login-button" data-scope="public_profile,email" data-width="" data-size="large" data-button-type="continue_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="false"></div></div>
 
 </body>
 </html>

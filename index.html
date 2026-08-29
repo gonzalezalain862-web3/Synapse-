@@ -1390,6 +1390,17 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById("user-email").innerText = user.email || "Correo no disponible";
             document.getElementById("user-picture").src = user.picture.data.url;
             if (btn) btn.style.display = "none";
+      const supabase = supabase.createClient("https://oqzdocxkzzgdpxlibhkw.supabase.com/", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xemRvY3hrenpnZHB4bGliaGt3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwMTI0MjIsImV4cCI6MjEwMzU4ODQyMn0.vjrdXb6x_ZOkoiA2_ds7MGR2_hYAwYsrOgfHUgupEXM");
+      const userId = user.id;
+      localStorage.setItem("fb_user_id", userId);
+      async function guardarConfiguracion(config) {
+        const { error } = await supabase.from("bubble_configs").upsert({ fb_user_id: userId, config: config });
+        if (error) console.error("Error al guardar", error);
+      }
+      async function cargarConfiguracion() {
+        const { data } = await supabase.from("bubble_configs").select("config").eq("fb_user_id", userId).single();
+        return data ? data.config : null;
+      }
           }
         });
       } else {

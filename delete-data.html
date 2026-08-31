@@ -3,23 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eliminar mis datos</title>
+    <title>Eliminar mis datos - Synapse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0b0b0f;
+            color: #e0e0e0;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            background: rgba(20, 20, 30, 0.8);
+            border: 1px solid #8b5cf6;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        h1 { color: #a855f7; margin-bottom: 20px; }
+        p { line-height: 1.8; font-size: 0.95rem; }
+        a { color: #ffffff; text-decoration: none; }
+        .btn {
+            display: inline-block;
+            background-color: #8b5cf6;
+            color: white !important;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 25px;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.6);
+            transition: transform 0.2s;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+            background-color: #a855f7;
+        }
+        .footer { margin-top: 30px; font-size: 0.8rem; color: #888; border-top: 1px solid #333; padding-top: 20px; }
+    </style>
 </head>
-<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0;">
-    <div style="background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; max-width: 400px;">
-        <h1 style="color: #333;">Eliminación de Datos</h1>
-        <p style="color: #666; line-height: 1.6;">
+<body>
+    <div class="container">
+        <h1>Eliminación de Datos</h1>
+        <p>
             Si deseas eliminar todos tus datos de nuestra plataforma (incluyendo tu configuración de burbuja de chat), pulsa el botón inferior. 
             Se abrirá tu correo electrónico con la solicitud ya preparada.
         </p>
         
         <!-- Botón que abre el correo con el mensaje pre-escrito -->
-        <a href="mailto:assistent.ai213@gmail.com?subject=Solicitud%20de%20borrado%20de%20datos&body=Hola,%20quiero%20eliminar%20todos%20mis%20datos%20de%20la%20plataforma%20Synapse.%20Mi%20ID%20de%20usuario%20es:%20" 
-           style="display: inline-block; background-color: #8b5cf6; color: white; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-size: 16px; font-weight: bold; margin-top: 20px;">
+        <a href="mailto:assistent.ai213@gmail.com?subject=Solicitud%20de%20borrado%20de%20datos&body=Hola,%20quiero%20eliminar%20todos%20mis%20datos%20de%20la%20plataforma%20Synapse.%20Mi%20ID%20de%20usuario%20es:%20" class="btn">
            Solicitar eliminación
         </a>
         
-        <p style="color: #999; font-size: 12px; margin-top: 20px;">Procesaremos tu solicitud en un plazo máximo de 30 días.</p>
+        <div class="footer">Procesaremos tu solicitud en un plazo máximo de 30 días.</div>
     </div>
 </body>
 </html>

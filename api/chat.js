@@ -3,62 +3,55 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Método no permitido' });
   }
 
-  const { message, provider = 'groq', model = '' } = req.body;
-  if (!message) {
-    return res.status(400).json({ error: 'Falta el mensaje' });
+  // Recibimos el historial completo de la conversación
+  const { historial, provider = 'openrouter', model = '' } = req.body;
+  
+  if (!historial || !Array.isArray(historial)) {
+    return res.status(400).json({ error: 'Falta el historial de la conversación' });
   }
 
-  let apiKey, url, body, headers = { 'Content-Type': 'application/json' };
+  // System Prompt: Define la personalidad de Synapse
+  const systemPrompt = {
+    role: "system",
+    content: "Eres el asistente virtual de Synapse, una plataforma de automatización de atención al cliente con IA y Web3. Tu tono debe ser amable, cercano y profesional, como si hablaras con un amigo. Usa un lenguaje natural, sé conciso (máximo 2 o 3 párrafos por respuesta) y usa emojis ocasionalmente para ser más cálido. Evita sonar como un robot o usar jerga técnica innecesaria. Tu objetivo es ayudar al usuario con dudas sobre la plataforma, sus servicios de IA, pagos con criptomonedas (USDC en Polygon) y configuración de burbujas de chat. Si no sabes algo, discúlpate amablemente y ofrece contactar a soporte."
+  };
+
+  const mensajesParaEnviar = [systemPrompt, ...historial];
+
+  let apiKey, url, body;
+  const headers = { 'Content-Type': 'application/json' };
 
   try {
     switch (provider) {
-      case 'groq': {
-        apiKey = process.env.GROQ_API_KEY;
-        if (!apiKey) throw new Error('GROQ_API_KEY no configurada');
-        url = 'https://api.groq.com/openai/v1/chat/completions';
-        headers['Authorization'] = `Bearer ${apiKey}`;
-        body = {
-          model: model || 'llama-3.1-8b-instant',
-          messages: [
-            { role: 'system', content: 'Eres un asistente útil y amigable de Assistent.ai' },
-            { role: 'user', content: message }
-          ],
-          temperature: 0.8,
-          max_tokens: 500
-        };
-        break;
-      }
       case 'openrouter': {
         apiKey = process.env.OPENROUTER_API_KEY;
         if (!apiKey) throw new Error('OPENROUTER_API_KEY no configurada');
+        
         url = 'https://openrouter.ai/api/v1/chat/completions';
         headers['Authorization'] = `Bearer ${apiKey}`;
-        headers['HTTP-Referer'] = 'https://synapse-v2-alpha.vercel.app';
-        headers['X-Title'] = 'Assistent.ai';
+        headers['HTTP-Referer'] = 'https://synapse-v3-alpha.vercel.app';
+        headers['X-Title'] = 'Synapse AI';
+        
         body = {
-          model: model || 'meta-llama/llama-3.1-8b-instruct:free',
-          messages: [
-            { role: 'system', content: 'Eres un asistente útil y amigable de Assistent.ai' },
-            { role: 'user', content: message }
-          ],
-          temperature: 0.8,
-          max_tokens: 500
+          model: model || 'x-ai/grok-2-1212',
+          messages: mensajesParaEnviar,
+          temperature: 0.85,
+          max_tokens: 300
         };
         break;
       }
-      case 'github': {
-        apiKey = process.env.GITHUB_TOKEN;
-        if (!apiKey) throw new Error('GITHUB_TOKEN no configurado');
-        url = 'https://models.inference.ai.azure.com/chat/completions';
+      case 'groq': {
+        apiKey = process.env.GROQ_API_KEY;
+        if (!apiKey) throw new Error('GROQ_API_KEY no configurada');
+        
+        url = 'https://api.groq.com/openai/v1/chat/completions';
         headers['Authorization'] = `Bearer ${apiKey}`;
+        
         body = {
-          model: model || 'gpt-4o-mini',
-          messages: [
-            { role: 'system', content: 'Eres un asistente útil y amigable de Assistent.ai' },
-            { role: 'user', content: message }
-          ],
-          temperature: 0.8,
-          max_tokens: 500
+          model: model || 'llama-3.1-8b-instant',
+          messages: mensajesParaEnviar,
+          temperature: 0.85,
+          max_tokens: 300
         };
         break;
       }
@@ -79,8 +72,11 @@ export default async function handler(req, res) {
 
     const data = await response.json();
     const reply = data.choices[0].message.content;
+    
     res.status(200).json({ reply });
+
   } catch (error) {
+    console.error('Error en el backend:', error);
     res.status(500).json({ error: error.message });
   }
 }

@@ -40,7 +40,7 @@ export default async function handler(req, res) {
         'X-Title': 'Synapse AI'
       },
       body: JSON.stringify({
-        model: model || 'meta-llama/llama-3.1-8b-instruct:free',
+        model: model || 'google/gemini-2.0-flash-exp:free',
         messages: mensajesParaEnviar,
         temperature: 0.85,
         max_tokens: 300

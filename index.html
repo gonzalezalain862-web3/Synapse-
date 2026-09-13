@@ -1380,6 +1380,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </style>
 <script>
     window.fbAsyncInit = function() {
+    const btn = document.getElementById("btn");
     FB.init({ appId: "1102940255740694", cookie: true, xfbml: true, version: "v22.0" });
     FB.AppEvents.logPageView();
     FB.getLoginStatus(function(response) {
@@ -1417,7 +1418,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }(document, "script", "facebook-jssdk"));
 </script>
 
-<div id="user-profile" style="display: none; text-align: center; margin-bottom: 20px;"><img id="user-picture" src="" style="width: 50px; height: 50px; border-radius: 50%;"><h3 id="user-name"></h3><p id="user-email"></p></div><div style="display: flex; justify-content: center; margin-top: 40px; padding-bottom: 30px;"><div class="fb-login-button" data-scope="public_profile,email" data-width="" data-size="large" data-button-type="continue_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="false"></div></div>
+<div id="user-profile" style="display: none; text-align: center; margin-bottom: 20px;"><img id="user-picture" src="" style="width: 50px; height: 50px; border-radius: 50%;"><h3 id="user-name"></h3><p id="user-email"></p></div><div id="btn" style="display: flex; justify-content: center; margin-top: 40px; padding-bottom: 30px;"><div class="fb-login-button" data-scope="public_profile,email" data-width="" data-size="large" data-button-type="continue_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="false"></div></div>
 
 </body>
 </html>

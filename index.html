@@ -953,7 +953,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
       <option value="openrouter">🌐 OpenRouter</option>
       <option value="github">🐙 GitHub Models</option>
     </select>
-    <select id="chat-model" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Seleccionar"><option value="llama-3.1-8b-instant">🦙 LLaMA 3.1 8B</option><option value="llama-3.3-70b-versatile">🦙 LLaMA 3.3 70B</option><option value="mixtral-8x7b-32768">🌀 Mixtral 8x7B</option><option value="gemma2-9b-it">💎 Gemma 2 9B</option></select>
+    <select id="chat-model" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Seleccionar"><option value="openrouter/free">🆓 Auto (Gratis)</option><option value="openai/gpt-4o-mini">⚡ GPT-4o Mini</option><option value="anthropic/claude-3.5-sonnet">🎭 Claude 3.5 Sonnet</option><option value="google/gemini-flash-1.5">✨ Gemini Flash 1.5</option></select>
   </div>
   <div class="conversaciones-container" id="chat-messages"></div>
 <div class="chat-input-area" style="padding-bottom: 25px;">
@@ -1079,7 +1079,7 @@ async function sendMessage() {
   const typing = addMessage('bot', '✦ Escribiendo...');
   typing.classList.add('typing');
   try {
-    const provider = document.getElementById('chat-provider') ? document.getElementById('chat-provider').value : 'groq';
+    const provider = document.getElementById('chat-provider') ? document.getElementById('chat-provider').value : 'openrouter';
     const model = document.getElementById('chat-model') ? document.getElementById('chat-model').value : '';
     let respuesta = '';
     if (provider === 'groq') {

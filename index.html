@@ -1047,7 +1047,7 @@ async function fetchOpenRouter(msg, modelId) {
   const r = await fetch('/api/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ historial: [{ role: 'user', content: msg }], provider: 'openrouter', model: modelId || 'x-ai/grok-2-1212' })
+    body: JSON.stringify({ historial: [{ role: 'user', content: msg }], provider: 'openrouter', model: modelId || 'openrouter/free' })
   });
   if (!r.ok) throw new Error('Error del servidor (' + r.status + ')');
   return (await r.json()).reply;
@@ -1057,7 +1057,7 @@ async function fetchGitHubModels(msg, modelId) {
   const r = await fetch('/api/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ historial: [{ role: 'user', content: msg }], provider: 'openrouter', model: modelId || 'gpt-4o-mini' })
+    body: JSON.stringify({ historial: [{ role: 'user', content: msg }], provider: 'openrouter', model: modelId || 'openrouter/free' })
   });
   if (!r.ok) throw new Error('Error del servidor (' + r.status + ')');
   return (await r.json()).reply;

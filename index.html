@@ -3,7 +3,6 @@
 <!-- Google tag (gtag.js) -->
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-7P7C4R4HD3"></script>
 <script>
-let supabase;
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag("js", new Date());
@@ -964,7 +963,6 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
 </div>
 
 <script>
-let supabase;
 const GEMINI_API_KEY = 'AIzaSyAf3tHjAeJROzXqIpJOix6iEjhq7OfNHHM';
 const OWNER_WALLET = '0x5572905245624E6cC5116F444c019ddc47F87829';
 const USDC_POLYGON = '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174';
@@ -1173,7 +1171,6 @@ function generarCodigosOP4() {
   if (!pid || isNaN(pid)) { alert('Por favor ingresa un Portal ID válido (solo números).'); return; }
   document.getElementById('op4-code-tracking').textContent = '<script type="text/javascript" id="hs-script-loader"\n async defer src="//js.hs-scripts.com/'+pid+'.js">\n<\/script>';
   document.getElementById('op4-code-bubble').textContent = '<script>
-let supabase;\n window.AssistentConfig = {\n   hubspotPortalId: "'+pid+'",\n   syncLeads: true,\n   position: "bottom-right",\n   primaryColor: "#a855f7",\n   welcomeMessage: "¡Hola! ¿En qué puedo ayudarte?"\n };\n<\/script>\n<script async src="https://cdn.assistent.ai/widget/v2/bubble.min.js"><\/script>';
   document.getElementById('op4-output').style.display = 'block';
   document.getElementById('op4-output').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
@@ -1254,7 +1251,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 <script>
-let supabase;
 (function() {
     // Forzar que el botón aparezca
     var btn = document.getElementById('send-btn');
@@ -1293,7 +1289,6 @@ let supabase;
 }
 </style>
 <script>
-let supabase;
 (function() {
     // Forzar visibilidad y ajuste en móviles
     if (window.innerWidth <= 768) {
@@ -1313,7 +1308,6 @@ let supabase;
 })();
 </script>
 <script>
-let supabase;
 (function() {
     function fixMobileChat() {
         var btn = document.getElementById('send-btn');
@@ -1392,8 +1386,8 @@ let supabase;
 }
 </style>
 <script>
-let supabase;
     window.fbAsyncInit = function() {
+    let supabase;
     const btn = document.getElementById("btn");
     FB.init({ appId: "1102940255740694", cookie: true, xfbml: true, version: "v22.0" });
     FB.AppEvents.logPageView();

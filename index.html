@@ -1170,7 +1170,6 @@ function generarCodigosOP4() {
   const pid = document.getElementById('op4-portal-id').value.trim();
   if (!pid || isNaN(pid)) { alert('Por favor ingresa un Portal ID válido (solo números).'); return; }
   document.getElementById('op4-code-tracking').textContent = '<script type="text/javascript" id="hs-script-loader"\n async defer src="//js.hs-scripts.com/'+pid+'.js">\n<\/script>';
-  document.getElementById('op4-code-bubble').textContent = '<script>
   document.getElementById('op4-output').style.display = 'block';
   document.getElementById('op4-output').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }

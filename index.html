@@ -1204,7 +1204,7 @@ const AI_MODELS_DATA = {
     { id: 'mistralai/mistral-large', name: '🌫️ Mistral Large' }
   ]
 };
-window.updateChatModels = function() {
+window.updateChatModels = function() { return;
   const provider = document.getElementById('chat-provider');
   const model = document.getElementById('chat-model');
   if (!provider || !model) return;

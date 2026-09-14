@@ -1033,7 +1033,7 @@ function addMessage(sender, text) {
   c.scrollTop = c.scrollHeight;
   return m;
 }
-async function fetchGroq(msg) {
+async function fetchGroq(msg, modelId) {
   const r = await fetch('/api/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -1079,7 +1079,7 @@ async function sendMessage() {
     const model = document.getElementById('chat-model') ? document.getElementById('chat-model').value : '';
     let respuesta = '';
     if (provider === 'groq') {
-      respuesta = await fetchGroq(message);
+      respuesta = await fetchGroq(message, model);
     } else if (provider === 'openrouter') {
       respuesta = await fetchOpenRouter(message, model);
     } else {

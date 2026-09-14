@@ -953,7 +953,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   </div>
   <div class="conversaciones-container" id="chat-messages"></div>
 <div class="chat-input-area" style="padding-bottom: 25px;">
-    <select id="chat-model" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Seleccionar"><optgroup label="OpenRouter (Gratis)"><option value="openrouter/free">🆓 Auto Gratis</option></optgroup><optgroup label="Grok (xAI)"><option value="grok-beta">🤖 Grok Beta</option><option value="grok-2-1212">🤖 Grok 2</option></optgroup><optgroup label="GitHub Models"><option value="gpt-4o-mini">⚡ GPT-4o Mini</option><option value="gpt-4o">⚡ GPT-4o</option></optgroup></select>
+    <select id="chat-model" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Seleccionar"><optgroup label="OpenRouter (Gratis)"><option value="openrouter/free" data-provider="openrouter">🆓 Auto Gratis</option></optgroup><optgroup label="Grok (xAI)"><option value="grok-beta" data-provider="groq">🤖 Grok Beta</option><option value="grok-2-1212" data-provider="groq">🤖 Grok 2</option></optgroup><optgroup label="GitHub Models"><option value="gpt-4o-mini" data-provider="github">⚡ GPT-4o Mini</option><option value="gpt-4o" data-provider="github">⚡ GPT-4o</option></optgroup></select>
     <button id="send-btn" onclick="sendMessage()" style="background: linear-gradient(135deg, rgb(124, 58, 237), rgb(168, 85, 247)); color: white; border: none; border-radius: 30px; padding: 12px 24px; font-weight: bold; cursor: pointer; margin: 15px auto 10px; align-self: center; display: flex; visibility: visible !important; opacity: 1 !important; justify-content: center; width: auto; min-width: 120px; font-size: 16px; z-index: 10000;">Enviar</button>
 </div>
 </div>
@@ -1075,7 +1075,7 @@ async function sendMessage() {
   const typing = addMessage('bot', '✦ Escribiendo...');
   typing.classList.add('typing');
   try {
-    const provider = document.getElementById('chat-provider') ? document.getElementById('chat-provider').value : 'openrouter';
+    const modelSelect = document.getElementById('chat-model'); const selectedOption = modelSelect.options[modelSelect.selectedIndex]; const provider = (selectedOption && selectedOption.dataset.provider) ? selectedOption.dataset.provider : 'openrouter';
     const model = document.getElementById('chat-model') ? document.getElementById('chat-model').value : '';
     let respuesta = '';
     if (provider === 'groq') {

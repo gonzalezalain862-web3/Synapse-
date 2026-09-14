@@ -19,7 +19,7 @@ export default async function handler(req, res) {
       const apiKey = process.env.GEMINI_API_KEY;
       if (!apiKey) return res.status(500).json({ error: 'GEMINI_API_KEY no configurada' });
 
-      const modelFinal = model || 'gemini-2.0-flash';
+      const modelFinal = model || 'gemini-3.6-flash';
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelFinal}:generateContent?key=${apiKey}`;
 
       const contents = historial.map(m => ({

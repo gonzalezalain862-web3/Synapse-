@@ -8,70 +8,91 @@ export default async function handler(req, res) {
 
   const { historial, provider = 'openrouter', model = '' } = req.body;
   if (!historial || !Array.isArray(historial)) {
-    return res.status(400).json({ error: 'Falta el historial de la conversación' });
+    return res.status(400).json({ error: 'Falta el historial' });
   }
 
-  const systemPrompt = {
-    role: "system",
-    content: "Eres el asistente virtual de Synapse, una plataforma de automatización de atención al cliente con IA y Web3. Tu tono debe ser amable, cercano y profesional, como si hablaras con un amigo. Usa un lenguaje natural, sé conciso (máximo 2 o 3 párrafos por respuesta) y usa emojis ocasionalmente para ser más cálido. Tu objetivo es ayudar al usuario con dudas sobre la plataforma, sus servicios de IA, pagos con criptomonedas (USDC en Polygon) y configuración de burbujas de chat."
-  };
-
-  const mensajesParaEnviar = [systemPrompt, ...historial];
+  const systemPromptText = "Eres el asistente virtual de Synapse, una plataforma de automatización con IA y Web3. Tono amable, cercano y profesional. Responde en español, sé conciso (2-3 párrafos) y usa emojis ocasionalmente. Ayuda con dudas sobre la plataforma, servicios de IA, pagos con criptomonedas (USDC en Polygon) y configuración de burbujas de chat.";
 
   try {
-    let url, apiKey, modelFinal;
+    // ============ GEMINI ============
+    if (provider === 'gemini') {
+      const apiKey = process.env.GEMINI_API_KEY;
+      if (!apiKey) return res.status(500).json({ error: 'GEMINI_API_KEY no configurada' });
 
+      const modelFinal = model || 'gemini-2.0-flash';
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelFinal}:generateContent?key=${apiKey}`;
+
+      const contents = historial.map(m => ({
+        role: m.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: m.content }]
+      }));
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: systemPromptText }] },
+          contents: contents,
+          generationConfig: { temperature: 0.85, maxOutputTokens: 300 }
+        })
+      });
+
+      const data = await response.json();
+      if (!response.ok) return res.status(500).json({ error: data.error?.message || `Error ${response.status} de Gemini` });
+      const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!reply) return res.status(500).json({ error: 'Respuesta vacía de Gemini' });
+      return res.status(200).json({ reply });
+    }
+
+    // ============ OPENROUTER ============
     if (provider === 'openrouter') {
-      url = 'https://openrouter.ai/api/v1/chat/completions';
-      apiKey = process.env.OPENROUTER_API_KEY;
-      modelFinal = model || 'openrouter/free';
-    } else if (provider === 'groq') {
-      url = 'https://api.x.ai/v1/chat/completions';
-      apiKey = process.env.XAI_API_KEY;
-      modelFinal = model || 'grok-beta';
-    } else if (provider === 'github') {
-      url = 'https://models.inference.ai.azure.com/chat/completions';
-      apiKey = process.env.GITHUB_TOKEN;
-      modelFinal = model || 'gpt-4o-mini';
-    } else {
-      return res.status(400).json({ error: 'Proveedor no soportado' });
+      const apiKey = process.env.OPENROUTER_API_KEY;
+      if (!apiKey) return res.status(500).json({ error: 'OPENROUTER_API_KEY no configurada' });
+
+      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': 'https://synapse-v3-alpha.vercel.app',
+          'X-Title': 'Synapse AI'
+        },
+        body: JSON.stringify({
+          model: model || 'openrouter/free',
+          messages: [{ role: 'system', content: systemPromptText }, ...historial],
+          temperature: 0.85,
+          max_tokens: 300
+        })
+      });
+      const data = await response.json();
+      if (!response.ok) return res.status(500).json({ error: data.error?.message || `Error ${response.status}` });
+      return res.status(200).json({ reply: data.choices[0].message.content });
     }
 
-    if (!apiKey) return res.status(500).json({ error: `API Key de ${provider} no configurada` });
+    // ============ GROK / xAI ============
+    if (provider === 'groq') {
+      const apiKey = process.env.XAI_API_KEY;
+      if (!apiKey) return res.status(500).json({ error: 'XAI_API_KEY no configurada' });
 
-    const headers = {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json'
-    };
-
-    // Cabeceras especiales para OpenRouter
-    if (provider === 'openrouter') {
-      headers['HTTP-Referer'] = 'https://synapse-v3-alpha.vercel.app';
-      headers['X-Title'] = 'Synapse AI';
+      const response = await fetch('https://api.x.ai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: model || 'grok-beta',
+          messages: [{ role: 'system', content: systemPromptText }, ...historial],
+          temperature: 0.85,
+          max_tokens: 300
+        })
+      });
+      const data = await response.json();
+      if (!response.ok) return res.status(500).json({ error: data.error?.message || `Error ${response.status}` });
+      return res.status(200).json({ reply: data.choices[0].message.content });
     }
 
-    const response = await fetch(url, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({
-        model: modelFinal,
-        messages: mensajesParaEnviar,
-        temperature: 0.85,
-        max_tokens: 300
-      })
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return res.status(500).json({ error: data.error?.message || `Error ${response.status} de ${provider}` });
-    }
-
-    if (!data.choices || !data.choices[0]) {
-      return res.status(500).json({ error: 'Respuesta vacía del proveedor' });
-    }
-
-    return res.status(200).json({ reply: data.choices[0].message.content });
+    return res.status(400).json({ error: 'Proveedor no soportado' });
 
   } catch (error) {
     console.error('Error en backend:', error);

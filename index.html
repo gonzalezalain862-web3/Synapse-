@@ -952,7 +952,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
     <select id="chat-model" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Seleccionar"><optgroup label="OpenRouter (Gratis)"><option value="openrouter/free" data-provider="openrouter">🆓 Auto Gratis</option></optgroup><optgroup label="Grok (xAI)"><option value="grok-beta" data-provider="groq">🤖 Grok Beta</option><option value="grok-2-1212" data-provider="groq">🤖 Grok 2</option></optgroup><optgroup label="GitHub Models"><option value="gpt-4o-mini" data-provider="github">⚡ GPT-4o Mini</option><option value="gpt-4o" data-provider="github">⚡ GPT-4o</option></optgroup></select>
   </div>
   <div class="conversaciones-container" id="chat-messages"></div>
-<div class="chat-input-area" style="padding-bottom: 25px;">
+    <select id="chat-model" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Seleccionar"><optgroup label="OpenRouter (Gratis)"><option value="openrouter/free" data-provider="openrouter">🆓 Auto Gratis</option></optgroup><optgroup label="Google Gemini"><option value="gemini-2.0-flash" data-provider="gemini">✨ Gemini 2.0 Flash</option><option value="gemini-2.5-flash" data-provider="gemini">✨ Gemini 2.5 Flash</option></optgroup><optgroup label="Grok (xAI)"><option value="grok-beta" data-provider="groq">🤖 Grok Beta</option></optgroup></select>
     <textarea id="chat-input" rows="3" placeholder="Escribe tu mensaje aquí..."></textarea>
     <button id="send-btn" onclick="sendMessage()" style="background: linear-gradient(135deg, rgb(124, 58, 237), rgb(168, 85, 247)); color: white; border: none; border-radius: 30px; padding: 12px 24px; font-weight: bold; cursor: pointer; margin: 15px auto 10px; align-self: center; display: flex; visibility: visible !important; opacity: 1 !important; justify-content: center; width: auto; min-width: 120px; font-size: 16px; z-index: 10000;">Enviar</button>
 </div>
@@ -1053,11 +1053,11 @@ async function fetchOpenRouter(msg, modelId) {
   return (await r.json()).reply;
 }
 
-async function fetchGitHubModels(msg, modelId) {
+async function fetchGemini(msg, modelId) {
   const r = await fetch('/api/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ historial: [{ role: 'user', content: msg }], provider: 'github', model: modelId || 'gpt-4o-mini' })
+    body: JSON.stringify({ historial: [{ role: 'user', content: msg }], provider: 'gemini', model: modelId || 'gemini-2.0-flash' })
   });
   if (!r.ok) throw new Error('Error del servidor (' + r.status + ')');
   return (await r.json()).reply;
@@ -1082,8 +1082,8 @@ async function sendMessage() {
       respuesta = await fetchGroq(message, model);
     } else if (provider === 'openrouter') {
       respuesta = await fetchOpenRouter(message, model);
-    } else {
-      respuesta = await fetchGitHubModels(message, model);
+    } else if (provider === 'gemini') {
+      respuesta = await fetchGemini(message, model);
     }
     typing.remove();
     addMessage('bot', respuesta);

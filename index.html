@@ -773,7 +773,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
 <section id="configuracion">
   <h2>Configuración</h2>
   <div class="form-container">
-    <div class="form-group"><div for="language">Idioma</div><select id="language" aria-label="Seleccionar"><option value="es">Español</option><option value="en">Inglés</option><option value="pt">Portugués</option></select></div>
+    <div class="form-group"><div for="language">Idioma</div><select id="language" aria-label="Seleccionar" onchange="cambiarIdioma(this.value)"><option value="es">Español</option><option value="en">Inglés</option><option value="pt">Portugués</option></select></div>
     <div class="form-group">
       <div>IA por Defecto</div>
       <select id="config-provider" onchange="updateConfigModels()" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Seleccionar">
@@ -1447,6 +1447,33 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 function abrirGuiaCallbell() { document.getElementById("modal-guia-callbell").style.display = "block"; document.body.style.overflow = "hidden"; }
 function cerrarGuiaCallbell() { document.getElementById("modal-guia-callbell").style.display = "none"; document.body.style.overflow = "auto"; }
+</script>
+<script>
+const TRADUCCIONES = {
+  es: { inicio: "Inicio", registro: "Registro", planes: "Planes", configuracion: "Configuración", entrenamiento: "Entrenamiento", vincular: "Vincular Chat", roi: "ROI", contactos: "Contactos", chat_ia: "Chat con IA", escribe: "Escribe tu mensaje aquí...", enviar: "Enviar", idioma: "Idioma", api_key: "API Key (Opcional)", api_placeholder: "Tu API key aquí", guardar_config: "Guardar Configuración", comienza: "Comienza Ahora", api_callbell: "API Key Callbell", nombre_bot: "Nombre del Bot", whatsapp: "WhatsApp (opcional)", conectar_callbell: "Conectar Callbell", ver_guia: "Ver Guía" },
+  en: { inicio: "Home", registro: "Register", planes: "Plans", configuracion: "Settings", entrenamiento: "Training", vincular: "Link Chat", roi: "ROI", contactos: "Contacts", chat_ia: "AI Chat", escribe: "Type your message here...", enviar: "Send", idioma: "Language", api_key: "API Key (Optional)", api_placeholder: "Your API key here", guardar_config: "Save Settings", comienza: "Start Now", api_callbell: "Callbell API Key", nombre_bot: "Bot Name", whatsapp: "WhatsApp (optional)", conectar_callbell: "Connect Callbell", ver_guia: "View Guide" },
+  pt: { inicio: "Início", registro: "Registro", planes: "Planos", configuracion: "Configurações", entrenamiento: "Treinamento", vincular: "Vincular Chat", roi: "ROI", contactos: "Contatos", chat_ia: "Chat com IA", escribe: "Digite sua mensagem aqui...", enviar: "Enviar", idioma: "Idioma", api_key: "API Key (Opcional)", api_placeholder: "Sua API key aqui", guardar_config: "Salvar Configurações", comienza: "Começar Agora", api_callbell: "API Key Callbell", nombre_bot: "Nome do Bot", whatsapp: "WhatsApp (opcional)", conectar_callbell: "Conectar Callbell", ver_guia: "Ver Guia" }
+};
+function cambiarIdioma(lang) {
+  const t = TRADUCCIONES[lang]; if (!t) return;
+  const nav = document.querySelectorAll("nav a");
+  const navKeys = ["inicio","registro","planes","configuracion","entrenamiento","vincular","roi","contactos"];
+  nav.forEach((a,i) => { if (navKeys[i]) a.textContent = t[navKeys[i]]; });
+  const reemplazos = [["✦ Chat con IA","✦ "+t.chat_ia],["Escribe tu mensaje aquí...",t.escribe],["Enviar",t.enviar],["API Key (Opcional)",t.api_key],["Tu API key aquí",t.api_placeholder],["Guardar Configuración",t.guardar_config],["Comienza Ahora",t.comienza],["Ver Guía",t.ver_guia],["Conectar Callbell",t.conectar_callbell],["API Key Callbell",t.api_callbell]];
+  document.querySelectorAll("h1,h2,h3,h4,button,label,div,span,p,a").forEach(el => {
+    const txt = el.textContent.trim();
+    for (const [orig, trad] of reemplazos) { if (txt === orig) { el.textContent = trad; break; } }
+  });
+  document.querySelectorAll("input,textarea").forEach(el => {
+    if (el.placeholder === "Escribe tu mensaje aquí...") el.placeholder = t.escribe;
+    if (el.placeholder === "Tu API key aquí") el.placeholder = t.api_placeholder;
+  });
+  localStorage.setItem("synapse_lang", lang);
+}
+window.addEventListener("DOMContentLoaded", () => {
+  const savedLang = localStorage.getItem("synapse_lang") || "es";
+  const sel = document.getElementById("language"); if (sel) sel.value = savedLang;
+});
 </script>
 </body>
 </html>

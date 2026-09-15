@@ -829,7 +829,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
       <div class="form-group"><div>Nombre del Bot</div><input type="text" value="Synapse" aria-label="Campo"></div>
       <div class="form-group"><div>WhatsApp (opcional)</div><input type="text" value="+58 412 2664528" aria-label="Campo"></div>
       <button class="cta" style="width:100%;max-width:100%;margin:0;">🔗 Conectar Callbell</button>
-      <button class="cta-secondary" style="width:100%;max-width:100%;margin:10px 0 0;">📖 Ver Guía</button>
+      <button class="cta-secondary" style="width:100%;max-width:100%;margin:10px 0 0;" onclick="abrirGuiaCallbell()">📖 Ver Guía</button>
     </div>
   </div>
   <div class="vsub" id="vsub-3">
@@ -1422,5 +1422,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <div id="user-profile" style="display: none; text-align: center; margin-bottom: 20px;"><img id="user-picture" src="" style="width: 50px; height: 50px; border-radius: 50%;"><h3 id="user-name"></h3><p id="user-email"></p></div><div id="btn" style="display: flex; justify-content: center; margin-top: 40px; padding-bottom: 30px;"><div class="fb-login-button" data-scope="public_profile,email" data-width="" data-size="large" data-button-type="continue_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="false"></div></div>
 
+<div id="modal-guia-callbell" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:99999; overflow-y:auto; padding:20px; box-sizing:border-box;">
+  <div style="max-width:700px; margin:20px auto; background:#0f0a1f; border:1px solid #7c3aed; border-radius:15px; padding:30px; color:#e0e0e0; font-family:Poppins,Arial,sans-serif;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <h2 style="color:#a855f7; margin:0;">📖 Guía: Cómo usar Callbell con Synapse</h2>
+      <button onclick="cerrarGuiaCallbell()" style="background:none; border:none; color:#a855f7; font-size:28px; cursor:pointer;">×</button>
+    </div>
+    <h3 style="color:#c084fc;">1️⃣ ¿Qué es Callbell?</h3>
+    <p>Callbell es una plataforma que unifica WhatsApp, Instagram, Facebook y Telegram en un solo panel. Con Synapse, puedes conectar tu bot IA a Callbell para responder automáticamente a tus clientes.</p>
+    <h3 style="color:#c084fc;">2️⃣ Obtener tu API Key</h3>
+    <ol><li>Ve a <a href="https://callbell.io/dashboard" target="_blank" style="color:#22d3ee;">callbell.io/dashboard</a>.</li>
+    <li>Entra en <strong>Configuración → Integraciones → API</strong>.</li>
+    <li>Copia tu <strong>API Key</strong> y pégala en Synapse.</li></ol>
+    <h3 style="color:#c084fc;">3️⃣ Vincular WhatsApp</h3>
+    <p>Configura el webhook en Callbell apuntando a: <code style="background:#1e1b4b; padding:3px 8px; border-radius:5px;">https://synapse-v3-alpha.vercel.app/api/callbell</code></p>
+    <h3 style="color:#c084fc;">4️⃣ Vincular a tu Burbuja</h3>
+    <p>Ve a <strong>Configuración</strong> y activa <strong>"Usar Callbell"</strong> para enrutar los mensajes a tu bot.</p>
+    <h3 style="color:#c084fc;">💡 Consejos</h3>
+    <ul><li>Plan gratuito: 1 agente y 1 canal.</li>
+    <li>Contacto: <strong>assistent.ai213@gmail.com</strong></li></ul>
+    <div style="text-align:center; margin-top:30px;">
+      <button onclick="cerrarGuiaCallbell()" style="background:linear-gradient(135deg,#7c3aed,#a855f7); color:white; border:none; border-radius:30px; padding:14px 35px; font-weight:bold; cursor:pointer; font-size:16px;">Entendido ✅</button>
+    </div></div></div>
+<script>
+function abrirGuiaCallbell() { document.getElementById("modal-guia-callbell").style.display = "block"; document.body.style.overflow = "hidden"; }
+function cerrarGuiaCallbell() { document.getElementById("modal-guia-callbell").style.display = "none"; document.body.style.overflow = "auto"; }
+</script>
 </body>
 </html>

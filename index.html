@@ -952,7 +952,19 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
     <select id="chat-model" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Seleccionar"><optgroup label="OpenRouter (Gratis)"><option value="openrouter/free" data-provider="openrouter">🆓 Auto Gratis</option></optgroup><optgroup label="Google Gemini"><option value="gemini-3.6-flash" data-provider="gemini">✨ Gemini 3.6 Flash</option></optgroup></select>
 
   <div class="conversaciones-container" id="chat-messages"></div>
-  <div class="chat-input-area" style="padding: 15px 20px 25px; background: #0f0a1f; border-top: 1px solid #2a1f4a;">
+  <div id="bubble-customizer" style="margin-top:20px; padding:15px; background:#0f0a1f; border:1px solid #7c3aed; border-radius:10px;">
+    <h4 style="color:#a855f7; margin-top:0;">🎨 Personaliza tu Burbuja</h4>
+    <label style="color:#c084fc; font-size:13px;">Color principal:</label>
+    <input type="color" id="bubble-color" value="#8b5cf6" style="width:100%; height:40px; border:none; border-radius:8px; margin-bottom:10px; cursor:pointer;">
+    <label style="color:#c084fc; font-size:13px;">Posición:</label>
+    <select id="bubble-position" style="width:100%; padding:10px; background:#1e1b4b; color:#fff; border:1px solid #7c3aed; border-radius:8px; margin-bottom:10px;">
+      <option value="bottom-right">Abajo a la derecha</option>
+      <option value="bottom-left">Abajo a la izquierda</option>
+    </select>
+    <label style="color:#c084fc; font-size:13px;">Mensaje de bienvenida:</label>
+    <input type="text" id="bubble-welcome" placeholder="¡Hola! ¿Cómo puedo ayudarte?" style="width:100%; padding:10px; background:#1e1b4b; color:#fff; border:1px solid #7c3aed; border-radius:8px; margin-bottom:10px; box-sizing:border-box;">
+    <button onclick="guardarConfiguracionBurbuja()" style="width:100%; padding:12px; background:linear-gradient(135deg,#7c3aed,#a855f7); color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">💾 Guardar Estilo</button>
+  </div>
     <textarea id="chat-input" rows="3" placeholder="Escribe tu mensaje aquí..." style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;resize:none;font-family:inherit;box-sizing:border-box;"></textarea>
     <button id="send-btn" onclick="sendMessage()" style="background: linear-gradient(135deg, rgb(124, 58, 237), rgb(168, 85, 247)); color: white; border: none; border-radius: 30px; padding: 12px 24px; font-weight: bold; cursor: pointer; margin: 15px auto 10px; display: flex; justify-content: center; min-width: 120px; font-size: 16px;">Enviar</button>
   </div>
@@ -1395,6 +1407,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const sb = window.supabase.createClient("https://oqzdocxkzzgdpxlibhkw.supabase.co/", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xemRvY3hrenpnZHB4bGliaGt3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwMTI0MjIsImV4cCI6MjEwMzU4ODQyMn0.vjrdXb6x_ZOkoiA2_ds7MGR2_hYAwYsrOgfHUgupEXM");
       const userId = user.id;
       localStorage.setItem("fb_user_id", userId);
+      cargarConfiguracionBurbuja();
       async function guardarConfiguracion(config) {
         const { error } = await sb.from("bubble_configs").upsert({ fb_user_id: userId, config: config });
         if (error) console.error("Error al guardar", error);
@@ -1469,6 +1482,48 @@ function cambiarIdioma(lang) {
   });
   localStorage.setItem("synapse_lang", lang);
 }
+async function guardarConfiguracionBurbuja() {
+  const userId = localStorage.getItem("fb_user_id");
+  if (!userId) { alert("Debes iniciar sesión con Facebook primero."); return; }
+  const config = {
+    color: document.getElementById("bubble-color").value,
+    position: document.getElementById("bubble-position").value,
+    welcome: document.getElementById("bubble-welcome").value || "¡Hola! ¿Cómo puedo ayudarte?"
+  };
+  const { error } = await sb.from("bubble_configs").upsert({ fb_user_id: userId, config: config });
+  if (error) { alert("Error al guardar: " + error.message); } else { alert("✅ Estilo guardado en tu perfil"); aplicarEstilosBurbuja(config); }
+}
+
+async function cargarConfiguracionBurbuja() {
+  const userId = localStorage.getItem("fb_user_id");
+  if (!userId) return;
+  const { data } = await sb.from("bubble_configs").select("config").eq("fb_user_id", userId).single();
+  if (data && data.config) {
+    document.getElementById("bubble-color").value = data.config.color || "#8b5cf6";
+    document.getElementById("bubble-position").value = data.config.position || "bottom-right";
+    document.getElementById("bubble-welcome").value = data.config.welcome || "";
+    aplicarEstilosBurbuja(data.config);
+  }
+}
+
+function aplicarEstilosBurbuja(config) {
+  const burbuja = document.getElementById("chat-bubble");
+  const panel = document.getElementById("chat-panel");
+  if (burbuja) burbuja.style.background = config.color || "#8b5cf6";
+  if (panel) {
+    if (config.position === "bottom-left") {
+      panel.style.right = "auto"; panel.style.left = "20px";
+      if (burbuja) { burbuja.style.right = "auto"; burbuja.style.left = "20px"; }
+    } else {
+      panel.style.left = "auto"; panel.style.right = "20px";
+      if (burbuja) { burbuja.style.left = "auto"; burbuja.style.right = "20px"; }
+    }
+  }
+  if (config.welcome && document.querySelector("#chat-messages .bot")) {
+    document.querySelector("#chat-messages .bot").innerText = config.welcome;
+  }
+}
+
 window.addEventListener("DOMContentLoaded", () => {
   const savedLang = localStorage.getItem("synapse_lang") || "es";
   const sel = document.getElementById("language"); if (sel) sel.value = savedLang;

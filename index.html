@@ -957,7 +957,8 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
     <select id="chat-model" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Seleccionar"><optgroup label="OpenRouter (Gratis)"><option value="openrouter/free" data-provider="openrouter">🆓 Auto Gratis</option></optgroup><optgroup label="Google Gemini"><option value="gemini-3.6-flash" data-provider="gemini">✨ Gemini 3.6 Flash</option></optgroup></select>
 
   <div class="conversaciones-container" id="chat-messages"></div>
-  <div id="bubble-customizer" style="margin-top:20px; padding:15px; background:#0f0a1f; border:1px solid #7c3aed; border-radius:10px;">
+  <button onclick="const c=document.getElementById('bubble-customizer'); c.style.display = c.style.display === 'none' ? 'block' : 'none';" style="width:100%; padding:10px; background:#1e1b4b; color:#a855f7; border:1px solid #7c3aed; border-radius:8px; cursor:pointer; margin-bottom:8px; font-size:13px; font-weight:bold;">🎨 Personalizar Burbuja</button>
+  <div id="bubble-customizer" style="display:none; margin-top:20px; padding:15px; background:#0f0a1f; border:1px solid #7c3aed; border-radius:10px;">
     <h4 style="color:#a855f7; margin-top:0;">🎨 Personaliza tu Burbuja</h4>
     <label style="color:#c084fc; font-size:13px;">Color principal:</label>
     <input type="color" id="bubble-color" value="#8b5cf6" style="width:100%; height:40px; border:none; border-radius:8px; margin-bottom:10px; cursor:pointer;">

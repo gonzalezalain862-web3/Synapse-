@@ -350,7 +350,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   box-shadow: 0 0 40px rgba(168,85,247,0.2);
   display:none; flex-direction:column; z-index:9998; overflow:hidden;
 }
-#chat-panel.active { display:flex; }
+#chat-panel.active { display:flex !important; }
 .chat-header {
   padding:1.2rem 1.5rem;
   border-bottom: 1px solid rgba(168,85,247,0.2);
@@ -947,7 +947,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
 </div>
 
 <!-- Chat Panel -->
-<div id="chat-panel" style="display: none;" class="">
+<div id="chat-panel" class="">
   <div class="chat-header">
     <h3>✦ Chat con IA</h3>
     <button class="close-btn" onclick="toggleChat()">×</button>

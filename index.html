@@ -658,6 +658,11 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
       <span class="logo-main">Synapse</span>
       <span class="logo-tagline">Soluciones Inteligentes</span>
     </div>
+  <div id="auth-buttons" style="display:flex; gap:8px; margin-left:auto; align-items:center;">
+    <button onclick="abrirModalAuth('login')" style="padding:8px 16px; background:transparent; color:#a855f7; border:1px solid #7c3aed; border-radius:20px; cursor:pointer; font-size:13px; font-weight:bold;">Iniciar Sesión</button>
+    <button onclick="abrirModalAuth('register')" style="padding:8px 16px; background:linear-gradient(135deg,#7c3aed,#a855f7); color:white; border:none; border-radius:20px; cursor:pointer; font-size:13px; font-weight:bold;">Registrarse</button>
+  </div>
+    </div>
   </div>
   <nav class="nav-menu">
     <a href="#inicio" onclick="showSection('inicio'); return false;">Inicio</a>
@@ -1404,7 +1409,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var emailEl = document.getElementById("user-email"); if (emailEl) emailEl.innerText = user.email || "Correo no disponible";
             var picEl = document.getElementById("user-picture"); if (picEl) picEl.src = user.picture.data.url;
             if (btn) btn.style.display = "none"; document.getElementById("user-profile").style.display = "block";
-      const sb = window.supabase.createClient("https://oqzdocxkzzgdpxlibhkw.supabase.co/", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xemRvY3hrenpnZHB4bGliaGt3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwMTI0MjIsImV4cCI6MjEwMzU4ODQyMn0.vjrdXb6x_ZOkoiA2_ds7MGR2_hYAwYsrOgfHUgupEXM");
+      window.sb = window.supabase.createClient("https://oqzdocxkzzgdpxlibhkw.supabase.co/", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xemRvY3hrenpnZHB4bGliaGt3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwMTI0MjIsImV4cCI6MjEwMzU4ODQyMn0.vjrdXb6x_ZOkoiA2_ds7MGR2_hYAwYsrOgfHUgupEXM");
       const userId = user.id;
       localStorage.setItem("fb_user_id", userId);
       cargarConfiguracionBurbuja();
@@ -1483,7 +1488,7 @@ function cambiarIdioma(lang) {
   localStorage.setItem("synapse_lang", lang);
 }
 async function guardarConfiguracionBurbuja() {
-  const userId = localStorage.getItem("fb_user_id");
+  const userId = localStorage.getItem("synapse_user_id") || localStorage.getItem("fb_user_id");
   if (!userId) { alert("Debes iniciar sesión con Facebook primero."); return; }
   const config = {
     color: document.getElementById("bubble-color").value,
@@ -1495,7 +1500,7 @@ async function guardarConfiguracionBurbuja() {
 }
 
 async function cargarConfiguracionBurbuja() {
-  const userId = localStorage.getItem("fb_user_id");
+  const userId = localStorage.getItem("synapse_user_id") || localStorage.getItem("fb_user_id");
   if (!userId) return;
   const { data } = await sb.from("bubble_configs").select("config").eq("fb_user_id", userId).single();
   if (data && data.config) {
@@ -1524,10 +1529,106 @@ function aplicarEstilosBurbuja(config) {
   }
 }
 
+async function submitAuth() {
+  const email = document.getElementById("auth-email").value.trim();
+  const password = document.getElementById("auth-password").value;
+  const errorEl = document.getElementById("auth-error");
+  errorEl.style.display = "none";
+  if (!email || !password) { errorEl.textContent = "Rellena todos los campos."; errorEl.style.display = "block"; return; }
+  if (password.length < 6) { errorEl.textContent = "La contraseña debe tener al menos 6 caracteres."; errorEl.style.display = "block"; return; }
+  const btn = document.getElementById("auth-submit");
+  btn.textContent = "Procesando..."; btn.disabled = true;
+  try {
+    if (modoAuth === "login") {
+      const { data, error } = await sb.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      localStorage.setItem("synapse_user_id", data.user.id);
+      localStorage.setItem("synapse_user_email", data.user.email);
+      await cargarConfiguracionBurbuja();
+      cerrarModalAuth(); alert("Sesion iniciada correctamente"); actualizarUIAuth();
+    } else {
+      const { data, error } = await sb.auth.signUp({ email, password });
+      if (error) throw error;
+      if (data.user && !data.session) {
+        errorEl.textContent = "Cuenta creada. Revisa tu correo para confirmarla.";
+        errorEl.style.color = "#fbbf24";
+        errorEl.style.display = "block";
+      } else if (data.session) {
+        localStorage.setItem("synapse_user_id", data.user.id);
+        localStorage.setItem("synapse_user_email", data.user.email);
+        cerrarModalAuth(); alert("Cuenta creada y sesion iniciada"); actualizarUIAuth();
+      }
+    }
+  } catch (err) {
+    errorEl.textContent = err.message || "Error de autenticacion";
+    errorEl.style.display = "block";
+  } finally {
+    btn.textContent = modoAuth === "login" ? "Entrar" : "Registrarme";
+    btn.disabled = false;
+  }
+}
+
+let modoAuth = "login";
+function abrirModalAuth(modo) { modoAuth = modo; actualizarVistaAuth(); document.getElementById("modal-auth").style.display = "block"; document.body.style.overflow = "hidden"; }
+function cerrarModalAuth() { document.getElementById("modal-auth").style.display = "none"; document.body.style.overflow = "auto"; document.getElementById("auth-error").style.display = "none"; }
+function cambiarTabAuth(modo) { modoAuth = modo; actualizarVistaAuth(); }
+function actualizarVistaAuth() {
+  const title = document.getElementById("auth-title");
+  const submit = document.getElementById("auth-submit");
+  const tabLogin = document.getElementById("tab-login");
+  const tabRegister = document.getElementById("tab-register");
+  if (modoAuth === "login") {
+    title.textContent = "Iniciar Sesion"; submit.textContent = "Entrar";
+    tabLogin.style.background = "#7c3aed"; tabLogin.style.color = "white";
+    tabRegister.style.background = "#1e1b4b"; tabRegister.style.color = "#a855f7";
+  } else {
+    title.textContent = "Crear Cuenta"; submit.textContent = "Registrarme";
+    tabRegister.style.background = "#7c3aed"; tabRegister.style.color = "white";
+    tabLogin.style.background = "#1e1b4b"; tabLogin.style.color = "#a855f7";
+  }
+}
+
+async function cerrarSesion() {
+  await sb.auth.signOut();
+  localStorage.removeItem("synapse_user_id");
+  localStorage.removeItem("synapse_user_email");
+  actualizarUIAuth();
+  alert("Sesion cerrada");
+}
+
+async function actualizarUIAuth() {
+  const { data: { session } } = await sb.auth.getSession();
+  const authButtons = document.getElementById("auth-buttons");
+  if (!authButtons) return;
+  if (session) {
+    const email = session.user.email;
+    authButtons.innerHTML = "<span style=\"color:#a855f7; font-size:12px; margin-right:8px;\">" + email + "</span><button onclick=\"cerrarSesion()\" style=\"padding:8px 16px; background:transparent; color:#f87171; border:1px solid #f87171; border-radius:20px; cursor:pointer; font-size:13px; font-weight:bold;\">Salir</button>";
+  } else {
+    authButtons.innerHTML = "<button onclick=\"abrirModalAuth(\x27login\x27)\" style=\"padding:8px 16px; background:transparent; color:#a855f7; border:1px solid #7c3aed; border-radius:20px; cursor:pointer; font-size:13px; font-weight:bold;\">Iniciar Sesion</button><button onclick=\"abrirModalAuth(\x27register\x27)\" style=\"padding:8px 16px; background:linear-gradient(135deg,#7c3aed,#a855f7); color:white; border:none; border-radius:20px; cursor:pointer; font-size:13px; font-weight:bold;\">Registrarse</button>";
+  }
+}
+
 window.addEventListener("DOMContentLoaded", () => {
+  setTimeout(() => { if (typeof actualizarUIAuth === "function") actualizarUIAuth(); }, 1500);
   const savedLang = localStorage.getItem("synapse_lang") || "es";
   const sel = document.getElementById("language"); if (sel) sel.value = savedLang;
 });
 </script>
+<div id="modal-auth" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:999999; overflow-y:auto; padding:20px; box-sizing:border-box;">
+  <div style="max-width:420px; margin:60px auto; background:#0f0a1f; border:1px solid #7c3aed; border-radius:15px; padding:30px; color:#e0e0e0; font-family:Poppins,Arial,sans-serif;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <h2 id="auth-title" style="color:#a855f7; margin:0; font-size:22px;">Iniciar Sesi&oacute;n</h2>
+      <button onclick="cerrarModalAuth()" style="background:none; border:none; color:#a855f7; font-size:28px; cursor:pointer;">&times;</button>
+    </div>
+    <div style="display:flex; gap:10px; margin-bottom:20px;">
+      <button id="tab-login" onclick="cambiarTabAuth(&quot;login&quot;)" style="flex:1; padding:10px; background:#7c3aed; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">Iniciar Sesi&oacute;n</button>
+      <button id="tab-register" onclick="cambiarTabAuth(&quot;register&quot;)" style="flex:1; padding:10px; background:#1e1b4b; color:#a855f7; border:1px solid #7c3aed; border-radius:8px; cursor:pointer; font-weight:bold;">Registrarse</button>
+    </div>
+    <input type="email" id="auth-email" placeholder="Correo electr&oacute;nico" style="width:100%; padding:14px; margin-bottom:12px; background:#1e1b4b; color:#fff; border:1px solid #7c3aed; border-radius:8px; font-size:14px; box-sizing:border-box;">
+    <input type="password" id="auth-password" placeholder="Contrase&ntilde;a (m&iacute;n. 6 caracteres)" style="width:100%; padding:14px; margin-bottom:12px; background:#1e1b4b; color:#fff; border:1px solid #7c3aed; border-radius:8px; font-size:14px; box-sizing:border-box;">
+    <div id="auth-error" style="color:#f87171; font-size:13px; margin-bottom:12px; display:none;"></div>
+    <button id="auth-submit" onclick="submitAuth()" style="width:100%; padding:14px; background:linear-gradient(135deg,#7c3aed,#a855f7); color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer; font-size:15px;">Entrar</button>
+  </div>
+</div>
 </body>
 </html>

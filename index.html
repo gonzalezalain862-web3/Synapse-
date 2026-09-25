@@ -1489,7 +1489,7 @@ function cambiarIdioma(lang) {
 }
 async function guardarConfiguracionBurbuja() {
   const userId = localStorage.getItem("synapse_user_id") || localStorage.getItem("fb_user_id");
-  if (!userId) { alert("Debes iniciar sesión con Facebook primero."); return; }
+  if (!userId) { alert("Debes iniciar sesión o registrarte primero."); return; }
   const config = {
     color: document.getElementById("bubble-color").value,
     position: document.getElementById("bubble-position").value,

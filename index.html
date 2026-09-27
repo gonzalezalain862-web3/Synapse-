@@ -351,7 +351,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   display:none; flex-direction:column; z-index:9998; overflow:hidden;
 }
 #chat-panel.active { display:flex !important; }
-.chat-header {
+.chat-header { flex-shrink:0;
   padding:1.2rem 1.5rem;
   border-bottom: 1px solid rgba(168,85,247,0.2);
   display:flex; justify-content:space-between; align-items:center;
@@ -364,7 +364,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
 }
 .chat-header .close-btn { background:none; border:none; color:var(--muted); font-size:1.4rem; cursor:pointer; transition:transform 0.2s; }
 .chat-header .close-btn:hover { transform:rotate(90deg); color:var(--cyan); }
-.ai-selector { padding:0.8rem 1.5rem; border-bottom:1px solid rgba(168,85,247,0.15); }
+.ai-selector { flex-shrink:0; padding:0.8rem 1.5rem; border-bottom:1px solid rgba(168,85,247,0.15); }
 .ai-selector label { display:block; color:var(--muted); font-size:0.82rem; margin-bottom:0.4rem; font-weight:600; }
 .ai-selector select {
   width:100%; padding:7px 10px;
@@ -372,7 +372,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   border: 1px solid rgba(168,85,247,0.3);
   border-radius:8px; color:var(--text); font-size:0.88rem; cursor:pointer;
 }
-.conversaciones-container { flex:1; min-height:0; overflow-y:auto; scroll-behavior:smooth; justify-content:flex-end; padding:1.2rem; display:flex; flex-direction:column; gap:10px; }
+.conversaciones-container { flex:1 1 0; min-height:0; overflow-y:auto; overflow-x:hidden; scroll-behavior:smooth; justify-content:flex-end; -webkit-overflow-scrolling:touch; padding:1.2rem; display:flex; flex-direction:column; gap:10px; }
 .conversaciones-container::-webkit-scrollbar { width:4px; }
 .conversaciones-container::-webkit-scrollbar-thumb { background:rgba(168,85,247,0.3); border-radius:10px; }
 .mensaje { max-width:90%; padding:10px 14px; border-radius:12px; word-wrap:break-word; overflow-wrap:break-word; white-space:pre-wrap; font-size:0.9rem; line-height:1.5; }
@@ -388,7 +388,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   border: 1px solid rgba(168,85,247,0.2);
 }
 .mensaje.typing { opacity:0.6; font-style:italic; }
-.chat-input-area { padding:0.8rem 1.2rem; border-top:1px solid rgba(168,85,247,0.2); display:flex; flex-direction:column; gap:10px; }
+.chat-input-area { flex-shrink:0; padding:0.8rem 1.2rem; border-top:1px solid rgba(168,85,247,0.2); display:flex; flex-direction:column; gap:10px; }
 .chat-input-area textarea {
   width:100%; min-height:100px; max-height:200px;
   padding:12px; background: rgba(168,85,247,0.08);

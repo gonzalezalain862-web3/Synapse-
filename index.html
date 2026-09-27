@@ -1400,7 +1400,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </style>
 <script>
     window.fbAsyncInit = function() {
-    let supabase;
     FB.AppEvents.logPageView();
     FB.getLoginStatus(function(response) {
       if (response.status === "connected") {
@@ -1409,8 +1408,6 @@ document.addEventListener('DOMContentLoaded', function() {
             var nameEl = document.getElementById("user-name"); if (nameEl) nameEl.innerText = user.name;
             var emailEl = document.getElementById("user-email"); if (emailEl) emailEl.innerText = user.email || "Correo no disponible";
             var picEl = document.getElementById("user-picture"); if (picEl) picEl.src = user.picture.data.url;
-            if (btn) btn.style.display = "none"; document.getElementById("user-profile").style.display = "block";
-      window.sb = window.supabase.createClient("https://oqzdocxkzzgdpxlibhkw.supabase.co/", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xemRvY3hrenpnZHB4bGliaGt3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwMTI0MjIsImV4cCI6MjEwMzU4ODQyMn0.vjrdXb6x_ZOkoiA2_ds7MGR2_hYAwYsrOgfHUgupEXM");
       const userId = user.id;
       localStorage.setItem("fb_user_id", userId);
       cargarConfiguracionBurbuja();
@@ -1541,14 +1538,14 @@ async function submitAuth() {
   btn.textContent = "Procesando..."; btn.disabled = true;
   try {
     if (modoAuth === "login") {
-      const { data, error } = await sb.auth.signInWithPassword({ email, password });
+      const { data, error } = await window.sb.auth.signInWithPassword({ email, password });
       if (error) throw error;
       localStorage.setItem("synapse_user_id", data.user.id);
       localStorage.setItem("synapse_user_email", data.user.email);
       await cargarConfiguracionBurbuja();
       cerrarModalAuth(); alert("Sesion iniciada correctamente"); actualizarUIAuth();
     } else {
-      const { data, error } = await sb.auth.signUp({ email, password });
+      const { data, error } = await window.sb.auth.signUp({ email, password });
       if (error) throw error;
       if (data.user && !data.session) {
         errorEl.textContent = "Cuenta creada. Revisa tu correo para confirmarla.";
@@ -1590,7 +1587,7 @@ function actualizarVistaAuth() {
 }
 
 async function cerrarSesion() {
-  await sb.auth.signOut();
+  if (window.sb) await window.sb.auth.signOut();
   localStorage.removeItem("synapse_user_id");
   localStorage.removeItem("synapse_user_email");
   actualizarUIAuth();
@@ -1598,7 +1595,7 @@ async function cerrarSesion() {
 }
 
 async function actualizarUIAuth() {
-  const { data: { session } } = await sb.auth.getSession();
+  if (!window.sb) return; const { data: { session } } = await window.sb.auth.getSession();
   const authButtons = document.getElementById("auth-buttons");
   if (!authButtons) return;
   if (session) {
@@ -1632,5 +1629,7 @@ window.addEventListener("DOMContentLoaded", () => {
     <button id="auth-submit" onclick="submitAuth()" style="width:100%; padding:14px; background:linear-gradient(135deg,#7c3aed,#a855f7); color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer; font-size:15px;">Entrar</button>
   </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>window.sb = window.supabase.createClient("https://oqzdocxkzzgdpxlibhkw.supabase.co/", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xemRvY3hrenpnZHB4bGliaGt3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwMTI0MjIsImV4cCI6MjEwMzU4ODQyMn0.vjrdXb6x_ZOkoiA2_ds7MGR2_hYAwYsrOgfHUgupEXM");</script>
 </body>
 </html>

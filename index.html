@@ -128,7 +128,7 @@ header {
   transition: width 0.3s;
 }
 .nav-menu a:hover::after { width:100%; }
-.nav-btn { display:none; flex-direction:column; cursor:pointer; gap:5px; z-index:1001; }
+.nav-btn { display:none; flex-direction:column; cursor:pointer; gap:5px; z-index:10002; }
 .nav-btn span { width:26px; height:2px; background:var(--accent); border-radius:2px; transition:all 0.4s; }
 
 /* ── MOBILE MENU ── */
@@ -137,9 +137,9 @@ header {
   background: rgba(5,8,24,0.97); backdrop-filter: var(--blur);
   border-bottom: 1px solid rgba(168,85,247,0.2);
   padding:1.5rem 4%; flex-direction:column; gap:0.5rem;
-  z-index:999; max-height:calc(100vh - 75px); overflow-y:auto;
+  z-index:10001; max-height:calc(100vh - 75px); overflow-y:auto;
 }
-.mobile-menu.active { display:flex; }
+.mobile-menu.active { display:flex !important; }
 .mobile-menu a {
   color:var(--text); text-decoration:none; font-size:1rem;
   font-weight:500; padding:0.9rem 1rem; border-radius:10px;
@@ -350,8 +350,8 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   box-shadow: 0 0 40px rgba(168,85,247,0.2);
   display:none; flex-direction:column; z-index:9998; overflow:hidden;
 }
-#chat-panel.active { display:flex !important; }
-.chat-header { flex-shrink:0;
+#chat-panel.active > * { width:100%; box-sizing:border-box; } #chat-panel.active { display:flex !important; }
+.chat-header { width:100%; display:flex; flex-direction:row; justify-content:space-between; align-items:center; flex-shrink:0;
   padding:1.2rem 1.5rem;
   border-bottom: 1px solid rgba(168,85,247,0.2);
   display:flex; justify-content:space-between; align-items:center;
@@ -559,7 +559,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   .form-group input, .form-group select, .form-group textarea { max-width:100%; }
   .form-container { padding:1.5rem; }
   .plans-grid { grid-template-columns:1fr; }
-  #chat-panel.active { position:fixed; top:0; left:0; right:0; bottom:0; width:100vw; height:100vh; max-height:100vh; border-radius:0; z-index:10000; }
+  #chat-panel.active > * { width:100%; box-sizing:border-box; } #chat-panel.active { position:fixed; top:0; left:0; right:0; bottom:0; width:100vw; height:100vh; max-height:100vh; border-radius:0; z-index:10000; display:flex; flex-direction:column; }
   #chat-bubble { bottom:18px; right:18px; width:58px; height:58px; }
   .vincular-drawer { width:280px; }
   .hero-features { grid-template-columns: repeat(2, 1fr); }
@@ -949,7 +949,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
 <!-- Chat Panel -->
 <div id="chat-panel" class="">
   <div class="chat-header">
-    <h3>✦ Chat con IA</h3>
+    <h3 style="margin:0; white-space:nowrap;">✦ Chat con IA</h3>
     <button class="close-btn" onclick="toggleChat()">×</button>
     <select id="chat-model" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Seleccionar"><optgroup label="Google Gemini"><option value="gemini-3.6-flash" data-provider="gemini" selected>✨ Gemini 3.6 Flash (Recomendado)</option></optgroup><optgroup label="OpenRouter (Gratis)"><option value="openrouter/free" data-provider="openrouter">🆓 Auto Gratis</option></optgroup><optgroup label="Grok (xAI)"><option value="grok-beta" data-provider="groq">🤖 Grok Beta</option></optgroup></select>
   <div class="ai-selector">

@@ -1070,7 +1070,7 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   </div>
   <div class="ai-selector">
     <input type="hidden" id="chat-provider" value="openrouter">
-    <select id="chat-model" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Seleccionar"><optgroup label="Google Gemini"><option value="gemini-3.6-flash" data-provider="gemini" selected>✨ Gemini 3.6 Flash (Recomendado)</option></optgroup><optgroup label="OpenRouter (Gratis)"><option value="openrouter/free" data-provider="openrouter">🆓 Auto Gratis</option></optgroup><optgroup label="Grok (xAI)"><option value="grok-beta" data-provider="groq">🤖 Grok Beta</option></optgroup></select>
+    <select id="chat-model" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Seleccionar"><optgroup label="Google Gemini"><option value="gemini-2.5-flash" data-provider="gemini" selected>✨ Gemini 2.5 Flash (Recomendado)</option></optgroup><optgroup label="OpenRouter (Gratis)"><option value="openrouter/free" data-provider="openrouter">🆓 Auto Gratis</option></optgroup><optgroup label="Grok (xAI)"><option value="grok-beta" data-provider="groq">🤖 Grok Beta</option></optgroup></select>
   </div>
   <div class="conversaciones-container" id="chat-messages"></div>
   <button onclick="const c=document.getElementById('bubble-customizer'); c.style.display = c.style.display === 'none' ? 'block' : 'none';" style="width:100%; padding:10px; background:#1e1b4b; color:#a855f7; border:1px solid #7c3aed; border-radius:8px; cursor:pointer; margin:8px 0; font-size:13px; font-weight:bold;">🎨 Personalizar Burbuja</button>
@@ -1253,7 +1253,7 @@ async function fetchGemini(msg, modelId) {
   const r = await fetch('/api/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ historial: [{ role: 'user', content: msg }], provider: 'gemini', model: modelId || 'gemini-3.6-flash' })
+    body: JSON.stringify({ historial: [{ role: 'user', content: msg }], provider: 'gemini', model: modelId || 'gemini-2.5-flash' })
   });
   if (!r.ok) throw new Error('Error del servidor (' + r.status + ')');
   return (await r.json()).reply;
@@ -1390,7 +1390,7 @@ const AI_MODELS_DATA = {
   ],
   openrouter: [
     { id: 'meta-llama/llama-3.1-8b-instruct:free', name: '🦙 LLaMA 3.1 Free' },
-    { id: 'gemini-3.6-flash', name: '✨ Gemini 3.6 Flash' },
+    { id: 'gemini-2.5-flash', name: '✨ Gemini 2.5 Flash' },
     { id: 'qwen/qwen-2.5-72b-instruct:free', name: '🔷 Qwen 2.5 Free' },
     { id: 'meta-llama/llama-3.3-70b-instruct', name: '🦙 LLaMA 3.3 70B' }
   ],

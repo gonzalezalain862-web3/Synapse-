@@ -1067,14 +1067,14 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   <div class="chat-header">
     <h3 style="margin:0; white-space:nowrap;">✦ Chat con IA</h3>
     <button class="close-btn" onclick="toggleChat()">×</button>
-    <select id="chat-model" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Seleccionar"><optgroup label="Google Gemini"><option value="gemini-3.6-flash" data-provider="gemini" selected>✨ Gemini 3.6 Flash (Recomendado)</option></optgroup><optgroup label="OpenRouter (Gratis)"><option value="openrouter/free" data-provider="openrouter">🆓 Auto Gratis</option></optgroup><optgroup label="Grok (xAI)"><option value="grok-beta" data-provider="groq">🤖 Grok Beta</option></optgroup></select>
+  </div>
   <div class="ai-selector">
     <input type="hidden" id="chat-provider" value="openrouter">
-    <select id="chat-model" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Seleccionar"><optgroup label="OpenRouter (Gratis)"><option value="openrouter/free" data-provider="openrouter">🆓 Auto Gratis</option></optgroup><optgroup label="Google Gemini"><option value="gemini-3.6-flash" data-provider="gemini">✨ Gemini 3.6 Flash</option></optgroup></select>
-
+    <select id="chat-model" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Seleccionar"><optgroup label="Google Gemini"><option value="gemini-3.6-flash" data-provider="gemini" selected>✨ Gemini 3.6 Flash (Recomendado)</option></optgroup><optgroup label="OpenRouter (Gratis)"><option value="openrouter/free" data-provider="openrouter">🆓 Auto Gratis</option></optgroup><optgroup label="Grok (xAI)"><option value="grok-beta" data-provider="groq">🤖 Grok Beta</option></optgroup></select>
+  </div>
   <div class="conversaciones-container" id="chat-messages"></div>
-  <button onclick="const c=document.getElementById('bubble-customizer'); c.style.display = c.style.display === 'none' ? 'block' : 'none';" style="width:100%; padding:10px; background:#1e1b4b; color:#a855f7; border:1px solid #7c3aed; border-radius:8px; cursor:pointer; margin-bottom:8px; font-size:13px; font-weight:bold;">🎨 Personalizar Burbuja</button>
-  <div id="bubble-customizer" style="display:none; margin-top:20px; padding:15px; background:#0f0a1f; border:1px solid #7c3aed; border-radius:10px;">
+  <button onclick="const c=document.getElementById('bubble-customizer'); c.style.display = c.style.display === 'none' ? 'block' : 'none';" style="width:100%; padding:10px; background:#1e1b4b; color:#a855f7; border:1px solid #7c3aed; border-radius:8px; cursor:pointer; margin:8px 0; font-size:13px; font-weight:bold;">🎨 Personalizar Burbuja</button>
+  <div id="bubble-customizer" style="display:none; margin:8px 0; padding:15px; background:#0f0a1f; border:1px solid #7c3aed; border-radius:10px;">
     <h4 style="color:#a855f7; margin-top:0;">🎨 Personaliza tu Burbuja</h4>
     <label style="color:#c084fc; font-size:13px;">Color principal:</label>
     <input type="color" id="bubble-color" value="#8b5cf6" style="width:100%; height:40px; border:none; border-radius:8px; margin-bottom:10px; cursor:pointer;">
@@ -1087,10 +1087,10 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
     <input type="text" id="bubble-welcome" placeholder="¡Hola! ¿Cómo puedo ayudarte?" style="width:100%; padding:10px; background:#1e1b4b; color:#fff; border:1px solid #7c3aed; border-radius:8px; margin-bottom:10px; box-sizing:border-box;">
     <button onclick="guardarConfiguracionBurbuja()" style="width:100%; padding:12px; background:linear-gradient(135deg,#7c3aed,#a855f7); color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">💾 Guardar Estilo</button>
   </div>
-    <textarea id="chat-input" rows="1" placeholder="Escribe tu mensaje aquí..." style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;resize:none;font-family:inherit;box-sizing:border-box;max-height:120px;overflow-y:auto;" oninput="this.style.height=&quot;auto&quot;; this.style.height=Math.min(this.scrollHeight, 120)+&quot;px&quot;;" onkeydown="if(event.key===&quot;Enter&quot; &amp;&amp; !event.shiftKey){event.preventDefault();sendMessage();}"></textarea>
+  <div class="chat-input-area">
+    <textarea id="chat-input" rows="1" placeholder="Escribe tu mensaje aquí..." style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;resize:none;font-family:inherit;box-sizing:border-box;max-height:120px;overflow-y:auto;" oninput="this.style.height='auto'; this.style.height=Math.min(this.scrollHeight, 120)+'px';" onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault();sendMessage();}"></textarea>
     <button id="send-btn" onclick="sendMessage()" style="background: linear-gradient(135deg, rgb(124, 58, 237), rgb(168, 85, 247)); color: white; border: none; border-radius: 30px; padding: 12px 24px; font-weight: bold; cursor: pointer; margin: 15px auto 10px; display: flex; justify-content: center; min-width: 120px; font-size: 16px;">Enviar</button>
   </div>
-</div>
 </div>
 
 <script>

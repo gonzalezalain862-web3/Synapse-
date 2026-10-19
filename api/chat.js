@@ -1,10 +1,36 @@
+export const config = { maxDuration: 60 }; // Aumenta el tiempo de espera a 60s (plan Hobby)
+
+async function fetchWithRetry(url, options, maxRetries = 3) {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      const response = await fetch(url, options);
+      if (response.ok) return response;
+      
+      // Si es un error transitorio (límite de tasa o error interno del servidor)
+      if (response.status === 429 || response.status >= 500) {
+        const delay = Math.pow(2, i) * 1000 + Math.random() * 1000; // Backoff exponencial con jitter
+        console.warn(`Reintento ${i + 1}/${maxRetries} en ${delay}ms por error ${response.status}`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        continue;
+      }
+      return response; // Error no reintentable (ej. 400, 401)
+    } catch (error) {
+      if (i === maxRetries - 1) throw error;
+      const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
+      console.warn(`Reintento ${i + 1}/${maxRetries} en ${delay}ms por error de red`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+  throw new Error('Máximo de reintentos alcanzado');
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') return res.status(200).end();
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Metodo no permitido' });
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
 
   const { historial, provider = 'openrouter', model = '', imagen = null } = req.body;
   if (!historial || !Array.isArray(historial)) {
@@ -14,11 +40,14 @@ export default async function handler(req, res) {
   const systemPromptText = "Eres el asistente virtual de Synapse, una plataforma SaaS de automatizacion inteligente con IA y Web3. Tono amable, cercano y profesional. Responde de forma concisa (2-3 parrafos) y usa emojis ocasionalmente. IMPORTANTE: Detecta el idioma del usuario y responde SIEMPRE en ese mismo idioma (espanol, ingles, portugues, frances, etc.). Sobre Synapse: Es una DApp con chat IA disponible 24/7, usa Gemini y OpenRouter como motores de IA, permite integrar un widget de chat en cualquier sitio web, se conecta con HubSpot CRM para captura automatica de leads, acepta pagos con USDC en Polygon, es compatible con MetaMask, Trust Wallet y Coinbase Wallet, se integra con WhatsApp, Instagram y Facebook mediante Callbell, y es compatible con Google Ads, Facebook Ads, Instagram Ads, LinkedIn Ads y TikTok Ads. PLANES DISPONIBLES (informacion exacta, no inventes otros): 1) PLAN BASICO: $29/mes - 1 bot, 10.000 mensajes/mes, soporte por email. 2) PLAN PRO: $55/mes - 5 bots, 100.000 mensajes/mes, soporte prioritario y analytics. 3) PLAN ENTERPRISE: precio a consultar - bots ilimitados, API personalizada y soporte dedicado. CONTACTO: WhatsApp +58 412 2664528, Email: assistent.ai213@gmail.com. Instrucciones: Se conciso pero completo, evita respuestas roboticas, guia al usuario paso a paso si pregunta como usar algo.";
 
   try {
+    // ============ GEMINI ============
     if (provider === 'gemini') {
       const apiKey = process.env.GEMINI_API_KEY;
       if (!apiKey) return res.status(500).json({ error: 'GEMINI_API_KEY no configurada' });
+
       const modelFinal = model || 'gemini-3.8-flash';
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelFinal}:generateContent?key=${apiKey}`;
+
       const contents = historial.map((m, idx) => {
         const parts = [{ text: m.content }];
         if (idx === historial.length - 1 && imagen) {
@@ -28,7 +57,8 @@ export default async function handler(req, res) {
         }
         return { role: m.role === 'assistant' ? 'model' : 'user', parts: parts };
       });
-      const response = await fetch(url, {
+
+      const response = await fetchWithRetry(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -37,16 +67,22 @@ export default async function handler(req, res) {
           generationConfig: { temperature: 0.85, maxOutputTokens: 800 }
         })
       });
+
       const data = await response.json();
-      if (!response.ok) return res.status(500).json({ error: data.error?.message || `Error ${response.status}` });
+      if (!response.ok) {
+        const errMsg = data.error?.message || `Error ${response.status}`;
+        return res.status(500).json({ error: errMsg });
+      }
       const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (!reply) return res.status(500).json({ error: 'Respuesta vacia de Gemini' });
+      if (!reply) return res.status(500).json({ error: 'Respuesta vacía de Gemini' });
       return res.status(200).json({ reply });
     }
 
+    // ============ OPENROUTER ============
     if (provider === 'openrouter') {
       const apiKey = process.env.OPENROUTER_API_KEY;
       if (!apiKey) return res.status(500).json({ error: 'OPENROUTER_API_KEY no configurada' });
+
       let mensajes;
       if (imagen) {
         const base64Data = imagen.split(',')[1];
@@ -61,7 +97,8 @@ export default async function handler(req, res) {
       } else {
         mensajes = [{ role: 'system', content: systemPromptText }, ...historial];
       }
-      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+
+      const response = await fetchWithRetry('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${apiKey}`,
@@ -72,19 +109,28 @@ export default async function handler(req, res) {
         body: JSON.stringify({ model: model || 'openrouter/free', messages: mensajes, temperature: 0.85, max_tokens: 800 })
       });
       const data = await response.json();
-      if (!response.ok) return res.status(500).json({ error: data.error?.message || `Error ${response.status}` });
+      if (!response.ok) {
+        const errMsg = data.error?.message || `Error ${response.status}`;
+        return res.status(500).json({ error: errMsg });
+      }
       return res.status(200).json({ reply: data.choices[0].message.content });
     }
+
+    // ============ GROK ============
     if (provider === 'groq') {
       const apiKey = process.env.XAI_API_KEY;
       if (!apiKey) return res.status(500).json({ error: 'XAI_API_KEY no configurada' });
-      const response = await fetch('https://api.x.ai/v1/chat/completions', {
+
+      const response = await fetchWithRetry('https://api.x.ai/v1/chat/completions', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ model: model || 'grok-beta', messages: [{ role: 'system', content: systemPromptText }, ...historial], temperature: 0.85, max_tokens: 800 })
       });
       const data = await response.json();
-      if (!response.ok) return res.status(500).json({ error: data.error?.message || `Error ${response.status}` });
+      if (!response.ok) {
+        const errMsg = data.error?.message || `Error ${response.status}`;
+        return res.status(500).json({ error: errMsg });
+      }
       return res.status(200).json({ reply: data.choices[0].message.content });
     }
 

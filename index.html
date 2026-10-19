@@ -1205,6 +1205,7 @@ function addMessage(sender, text) {
   contenido.classList.add('mensaje-contenido');
   contenido.textContent = text;
   
+  if (sender === "bot" && !text.includes("Error") && currentConversationId) { guardarMensajeSupabase("assistant", text); }
   const time = document.createElement('span');
   time.classList.add('mensaje-time');
   const ahora = new Date();
@@ -1263,6 +1264,7 @@ async function sendMessage() {
   const input = document.getElementById('chat-input');
   const message = input.value.trim();
   if (!message) return;
+  await guardarMensajeSupabase("user", message);
   isSending = true;
   const sendBtn = document.getElementById('send-btn');
   if (sendBtn) sendBtn.disabled = true;
@@ -1809,5 +1811,124 @@ window.addEventListener("DOMContentLoaded", () => {
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>window.sb = window.supabase.createClient("https://oqzdocxkzzgdpxlibhkw.supabase.co/", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xemRvY3hrenpnZHB4bGliaGt3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwMTI0MjIsImV4cCI6MjEwMzU4ODQyMn0.vjrdXb6x_ZOkoiA2_ds7MGR2_hYAwYsrOgfHUgupEXM");</script>
+<script>
+let currentConversationId = null;
+
+function toggleSidebar() {
+  const sidebar = document.getElementById('chat-sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  if (!sidebar || !overlay) return;
+  const isOpen = sidebar.style.left === '0px';
+  if (isOpen) {
+    sidebar.style.left = '-100%';
+    overlay.style.display = 'none';
+  } else {
+    sidebar.style.left = '0';
+    overlay.style.display = 'block';
+    cargarSidebar();
+  }
+}
+
+async function cargarSidebar() {
+  if (!window.sb) return;
+  const { data: { session } } = await window.sb.auth.getSession();
+  if (!session) {
+    document.getElementById('lista-sidebar').innerHTML = '<p style="color:#888; text-align:center; padding:20px;">Inicia sesión para ver tu historial.</p>';
+    return;
+  }
+  document.getElementById('user-email-sidebar').textContent = session.user.email;
+  document.getElementById('user-avatar').textContent = session.user.email.charAt(0).toUpperCase();
+  
+  const { data, error } = await window.sb.from('conversations').select('id, title, created_at').order('created_at', { ascending: false });
+  if (error || !data) {
+    document.getElementById('lista-sidebar').innerHTML = '<p style="color:#888; text-align:center; padding:20px;">Error al cargar historial.</p>';
+    return;
+  }
+  window.todasLasConversaciones = data;
+  renderizarHistorial(data);
+}
+
+function renderizarHistorial(conversaciones) {
+  const contenedor = document.getElementById('lista-sidebar');
+  if (!contenedor) return;
+  if (conversaciones.length === 0) {
+    contenedor.innerHTML = '<p style="color:#888; text-align:center; padding:20px;">No hay conversaciones guardadas.</p>';
+    return;
+  }
+  const grupos = {};
+  const hoy = new Date().toDateString();
+  const ayer = new Date(Date.now() - 86400000).toDateString();
+  
+  conversaciones.forEach(c => {
+    const fecha = new Date(c.created_at);
+    const fechaStr = fecha.toDateString();
+    let grupo = fecha.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+    if (fechaStr === hoy) grupo = 'Hoy';
+    else if (fechaStr === ayer) grupo = 'Ayer';
+    if (!grupos[grupo]) grupos[grupo] = [];
+    grupos[grupo].push(c);
+  });
+
+  let html = '';
+  for (const [grupo, items] of Object.entries(grupos)) {
+    html += `<div style="padding:15px 15px 5px 15px; font-size:12px; color:#888; font-weight:bold; text-transform:capitalize;">${grupo}</div>`;
+    items.forEach(c => {
+      html += `
+        <div class="historial-item" onclick="cargarConversacionSidebar('${c.id}')" style="padding:12px 15px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; transition:background 0.2s;" onmouseover="this.style.background='#1e1b4b'" onmouseout="this.style.background='transparent'">
+          <div style="color:#e0e0e0; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${c.title || 'Chat sin título'}</div>
+          <button onclick="eliminarConversacion(event, '${c.id}')" style="background:none; border:none; color:#888; font-size:18px; cursor:pointer;">⋮</button>
+        </div>
+      `;
+    });
+  }
+  contenedor.innerHTML = html;
+}
+
+function filtrarHistorial() {
+  const query = document.getElementById('buscador-historial').value.toLowerCase();
+  const filtradas = (window.todasLasConversaciones || []).filter(c => (c.title || 'Chat sin título').toLowerCase().includes(query));
+  renderizarHistorial(filtradas);
+}
+
+async function eliminarConversacion(event, id) {
+  event.stopPropagation();
+  if (!confirm('¿Eliminar esta conversación?')) return;
+  const { error } = await window.sb.from('conversations').delete().eq('id', id);
+  if (!error) {
+    cargarSidebar();
+    if (currentConversationId === id) {
+      document.getElementById('chat-messages').innerHTML = '';
+      currentConversationId = null;
+    }
+  }
+}
+
+async function cargarConversacionSidebar(id) {
+  currentConversationId = id;
+  toggleSidebar();
+  const { data, error } = await window.sb.from('chat_messages').select('role, content').eq('conversation_id', id).order('created_at', { ascending: true });
+  const contenedor = document.getElementById('chat-messages');
+  if (contenedor) contenedor.innerHTML = '';
+  if (!error && data && data.length > 0) {
+    data.forEach(m => addMessage(m.role === 'user' ? 'usuario' : 'bot', m.content));
+  } else {
+    addMessage('bot', 'Esta conversación está vacía.');
+  }
+}
+
+async function guardarMensajeSupabase(role, content) {
+  if (!window.sb) return;
+  const { data: { session } } = await window.sb.auth.getSession();
+  if (!session) return;
+
+  if (!currentConversationId) {
+    const title = role === 'user' ? content.substring(0, 40) + (content.length > 40 ? '...' : '') : 'Nuevo Chat';
+    const { data, error } = await window.sb.from('conversations').insert([{ user_id: session.user.id, title: title }]).select().single();
+    if (error) return;
+    currentConversationId = data.id;
+  }
+  await window.sb.from('chat_messages').insert([{ conversation_id: currentConversationId, role: role, content: content }]);
+}
+</script>
 </body>
 </html>

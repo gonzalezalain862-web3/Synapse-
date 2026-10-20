@@ -1,19 +1,25 @@
 export const config = { maxDuration: 60 };
 
-async function fetchWithRetry(url, options, maxRetries = 3) {
+async function fetchWithRetry(url, options, maxRetries = 5) {
   for (let i = 0; i < maxRetries; i++) {
     try {
       const response = await fetch(url, options);
       if (response.ok) return response;
+      
       if (response.status === 429 || response.status >= 500) {
-        const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
+        const delay = Math.pow(2, i) * 2000 + Math.random() * 1000;
+        console.error(`[fetchWithRetry] Intento ${i + 1} fallido con estado ${response.status}. Reintentando en ${Math.round(delay)}ms...`);
         await new Promise(resolve => setTimeout(resolve, delay));
         continue;
       }
       return response;
     } catch (error) {
-      if (i === maxRetries - 1) throw error;
-      const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
+      if (i === maxRetries - 1) {
+        console.error(`[fetchWithRetry] Error de red final en el intento ${i + 1}:`, error.message);
+        throw error;
+      }
+      const delay = Math.pow(2, i) * 2000 + Math.random() * 1000;
+      console.error(`[fetchWithRetry] Error de red en intento ${i + 1}: ${error.message}. Reintentando en ${Math.round(delay)}ms...`);
       await new Promise(resolve => setTimeout(resolve, delay));
     }
   }
@@ -36,7 +42,7 @@ export default async function handler(req, res) {
   const systemPromptText = "Eres el asistente virtual de Synapse, una plataforma SaaS de automatizacion inteligente con IA y Web3. Tono amable, cercano y profesional. Responde de forma concisa (2-3 parrafos) y usa emojis ocasionalmente. IMPORTANTE: Detecta el idioma del usuario y responde SIEMPRE en ese mismo idioma (espanol, ingles, portugues, frances, etc.). Sobre Synapse: Es una DApp con chat IA disponible 24/7, usa Gemini y OpenRouter como motores de IA, permite integrar un widget de chat en cualquier sitio web, se conecta con HubSpot CRM para captura automatica de leads, acepta pagos con USDC en Polygon, es compatible con MetaMask, Trust Wallet y Coinbase Wallet, se integra con WhatsApp, Instagram y Facebook mediante Callbell, y es compatible con Google Ads, Facebook Ads, Instagram Ads, LinkedIn Ads y TikTok Ads. PLANES DISPONIBLES (informacion exacta, no inventes otros): 1) PLAN BASICO: $29/mes - 1 bot, 10.000 mensajes/mes, soporte por email. 2) PLAN PRO: $55/mes - 5 bots, 100.000 mensajes/mes, soporte prioritario y analytics. 3) PLAN ENTERPRISE: precio a consultar - bots ilimitados, API personalizada y soporte dedicado. CONTACTO: WhatsApp +58 412 2664528, Email: assistent.ai213@gmail.com. Instrucciones: Se conciso pero completo, evita respuestas roboticas, guia al usuario paso a paso si pregunta como usar algo.";
 
   try {
-    // ============ GEMINI (STREAMING) ============
+    // ============ GEMINI (STREAMING CON TRANSFORMSTREAM) ============
     if (provider === 'gemini') {
       const apiKey = process.env.GEMINI_API_KEY;
       if (!apiKey) return res.status(500).json({ error: 'GEMINI_API_KEY no configurada' });
@@ -66,6 +72,7 @@ export default async function handler(req, res) {
 
       if (!response.ok) {
         const errText = await response.text();
+        console.error('Error de Gemini:', errText);
         return res.status(500).json({ error: `Error de Gemini: ${errText}` });
       }
 
@@ -73,28 +80,30 @@ export default async function handler(req, res) {
       res.setHeader('Cache-Control', 'no-cache');
       res.setHeader('Connection', 'keep-alive');
 
-      const reader = response.body.getReader();
+      const transformStream = new TransformStream();
+      const writer = transformStream.writable.getWriter();
+      const encoder = new TextEncoder();
       const decoder = new TextDecoder();
 
-      res.write(': keep-alive\n\n');
-      const keepAliveInterval = setInterval(() => {
-        res.write(': keep-alive\n\n');
-      }, 10000);
+      writer.write(encoder.encode(': keep-alive\n\n'));
 
-      try {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          const chunk = decoder.decode(value, { stream: true });
-          res.write(chunk);
+      (async () => {
+        try {
+          const reader = response.body.getReader();
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            const chunk = decoder.decode(value, { stream: true });
+            await writer.write(encoder.encode(chunk));
+          }
+        } catch (error) {
+          console.error('Error en streaming:', error);
+        } finally {
+          await writer.close();
         }
-      } catch (error) {
-        console.error('Error en streaming:', error);
-      } finally {
-        clearInterval(keepAliveInterval);
-        res.end();
-      }
-      return;
+      })();
+
+      return res.send(transformStream.readable);
     }
 
     // ============ OPENROUTER ============

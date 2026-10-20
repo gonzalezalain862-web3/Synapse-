@@ -1,3 +1,4 @@
+export const runtime = "edge";
 export const config = { maxDuration: 60 }; // Aumenta el tiempo de espera a 60s (plan Hobby)
 
 async function fetchWithRetry(url, options, maxRetries = 3) {
@@ -42,60 +43,68 @@ export default async function handler(req, res) {
   try {
     // ============ GEMINI ============
     // ============ GEMINI (STREAMING) ============
-    if (provider === 'gemini') {
-      const apiKey = process.env.GEMINI_API_KEY;
-      if (!apiKey) return res.status(500).json({ error: 'GEMINI_API_KEY no configurada' });
+      // ============ GEMINI (STREAMING CON KEEP-ALIVE) ============
+      if (provider === 'gemini') {
+        const apiKey = process.env.GEMINI_API_KEY;
+        if (!apiKey) return res.status(500).json({ error: 'GEMINI_API_KEY no configurada' });
 
-      const modelFinal = model || 'gemini-3.8-flash';
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelFinal}:streamGenerateContent?alt=sse&key=${apiKey}`;
+        const modelFinal = model || 'gemini-3.8-flash';
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelFinal}:streamGenerateContent?alt=sse&key=${apiKey}`;
 
-      const contents = historial.map((m, idx) => {
-        const parts = [{ text: m.content }];
-        if (idx === historial.length - 1 && imagen) {
-          const base64Data = imagen.split(',')[1];
-          const mimeType = imagen.split(';')[0].split(':')[1];
-          parts.push({ inline_data: { mime_type: mimeType, data: base64Data } });
+        const contents = historial.map((m, idx) => {
+          const parts = [{ text: m.content }];
+          if (idx === historial.length - 1 && imagen) {
+            const base64Data = imagen.split(',')[1];
+            const mimeType = imagen.split(';')[0].split(':')[1];
+            parts.push({ inline_data: { mime_type: mimeType, data: base64Data } });
+          }
+          return { role: m.role === 'assistant' ? 'model' : 'user', parts: parts };
+        });
+
+        const response = await fetchWithRetry(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            systemInstruction: { parts: [{ text: systemPromptText }] },
+            contents: contents,
+            generationConfig: { temperature: 0.85, maxOutputTokens: 800 }
+          })
+        });
+
+        if (!response.ok) {
+          const errText = await response.text();
+          return res.status(500).json({ error: `Error de Gemini: ${errText}` });
         }
-        return { role: m.role === 'assistant' ? 'model' : 'user', parts: parts };
-      });
 
-      const response = await fetchWithRetry(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: systemPromptText }] },
-          contents: contents,
-          generationConfig: { temperature: 0.85, maxOutputTokens: 800 }
-        })
-      });
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
 
-      if (!response.ok) {
-        const errText = await response.text();
-        return res.status(500).json({ error: `Error de Gemini: ${errText}` });
-      }
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
 
-      res.setHeader('Content-Type', 'text/event-stream');
-      res.setHeader('Cache-Control', 'no-cache');
-      res.setHeader('Connection', 'keep-alive');
+        // Enviar un comentario SSE inicial para mantener viva la conexión
+        res.write(': keep-alive\n\n');
 
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
+        const keepAliveInterval = setInterval(() => {
+          res.write(': keep-alive\n\n');
+        }, 10000);
 
-      try {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          const chunk = decoder.decode(value, { stream: true });
-          res.write(chunk);
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            const chunk = decoder.decode(value, { stream: true });
+            res.write(chunk);
+          }
+        } catch (error) {
+          console.error('Error en streaming:', error);
+        } finally {
+          clearInterval(keepAliveInterval);
+          res.end();
         }
-      } catch (error) {
-        console.error('Error en streaming:', error);
-      } finally {
-        res.end();
+        return;
       }
-      return; // Importante: salir para no ejecutar el res.json() final
-    }
-
     if (provider === 'openrouter') {
       const apiKey = process.env.OPENROUTER_API_KEY;
       if (!apiKey) return res.status(500).json({ error: 'OPENROUTER_API_KEY no configurada' });

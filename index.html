@@ -1263,17 +1263,28 @@ async function fetchGemini(msg, modelId) {
   const decoder = new TextDecoder();
   let fullText = '';
 
+  // Crear el mensaje del bot con un span específico para el texto
   const botMessage = addMessage('bot', '');
   const contentDiv = botMessage.querySelector('.mensaje-contenido');
-  const textNode = contentDiv.childNodes[0]; // El nodo de texto vacío
+  let textSpan = contentDiv.querySelector('.mensaje-texto');
+  if (!textSpan) {
+    textSpan = document.createElement('span');
+    textSpan.className = 'mensaje-texto';
+    contentDiv.insertBefore(textSpan, contentDiv.firstChild);
+  }
+
+  let buffer = '';
 
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
 
-    const chunk = decoder.decode(value, { stream: true });
-    const lines = chunk.split('\n');
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split('\n');
     
+    // Guardar la última línea incompleta en el buffer
+    buffer = lines.pop();
+
     for (const line of lines) {
       if (line.startsWith('data: ')) {
         try {
@@ -1281,14 +1292,20 @@ async function fetchGemini(msg, modelId) {
           const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
           if (text) {
             fullText += text;
-            if (textNode) textNode.nodeValue = fullText; // Actualizar solo el texto
+            textSpan.textContent = fullText;
             const chatContainer = document.getElementById('chat-messages');
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+            if (chatContainer) chatContainer.scrollTop = chatContainer.scrollHeight;
           }
         } catch (e) {}
       }
     }
   }
+  
+  // Si al final no hay texto, mostrar un mensaje de error
+  if (!fullText) {
+    textSpan.textContent = '⚠️ No se recibió respuesta del servidor.';
+  }
+  
   return fullText;
 }
 async function sendMessage() {
@@ -1316,7 +1333,6 @@ async function sendMessage() {
       respuesta = await fetchGemini(message, model);
     }
     typing.remove();
-    addMessage('bot', respuesta);
   } catch(e) {
     typing.remove();
     addMessage('bot', '⚠️ Error: '+e.message);

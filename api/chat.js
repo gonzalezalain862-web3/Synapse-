@@ -41,12 +41,13 @@ export default async function handler(req, res) {
 
   try {
     // ============ GEMINI ============
+    // ============ GEMINI (STREAMING) ============
     if (provider === 'gemini') {
       const apiKey = process.env.GEMINI_API_KEY;
       if (!apiKey) return res.status(500).json({ error: 'GEMINI_API_KEY no configurada' });
 
       const modelFinal = model || 'gemini-3.8-flash';
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelFinal}:generateContent?key=${apiKey}`;
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelFinal}:streamGenerateContent?alt=sse&key=${apiKey}`;
 
       const contents = historial.map((m, idx) => {
         const parts = [{ text: m.content }];
@@ -68,17 +69,33 @@ export default async function handler(req, res) {
         })
       });
 
-      const data = await response.json();
       if (!response.ok) {
-        const errMsg = data.error?.message || `Error ${response.status}`;
-        return res.status(500).json({ error: errMsg });
+        const errText = await response.text();
+        return res.status(500).json({ error: `Error de Gemini: ${errText}` });
       }
-      const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (!reply) return res.status(500).json({ error: 'Respuesta vacía de Gemini' });
-      return res.status(200).json({ reply });
+
+      res.setHeader('Content-Type', 'text/event-stream');
+      res.setHeader('Cache-Control', 'no-cache');
+      res.setHeader('Connection', 'keep-alive');
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          const chunk = decoder.decode(value, { stream: true });
+          res.write(chunk);
+        }
+      } catch (error) {
+        console.error('Error en streaming:', error);
+      } finally {
+        res.end();
+      }
+      return; // Importante: salir para no ejecutar el res.json() final
     }
 
-    // ============ OPENROUTER ============
     if (provider === 'openrouter') {
       const apiKey = process.env.OPENROUTER_API_KEY;
       if (!apiKey) return res.status(500).json({ error: 'OPENROUTER_API_KEY no configurada' });

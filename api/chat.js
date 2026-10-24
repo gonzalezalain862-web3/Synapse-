@@ -1,21 +1,19 @@
 export const config = { maxDuration: 60 };
 
-async function fetchWithRetry(url, options, maxRetries = 5) {
+async function fetchWithRetry(url, options, maxRetries = 2) {
   for (let i = 0; i < maxRetries; i++) {
     try {
       const response = await fetch(url, options);
       if (response.ok) return response;
       if (response.status === 429 || response.status >= 500) {
-        const delay = Math.pow(2, i) * 2000 + Math.random() * 1000;
-        console.error(`[fetchWithRetry] Intento ${i + 1} fallido con estado ${response.status}. Reintentando en ${Math.round(delay)}ms...`);
+        const delay = Math.pow(2, i) * 1000;
         await new Promise(resolve => setTimeout(resolve, delay));
         continue;
       }
       return response;
     } catch (error) {
       if (i === maxRetries - 1) throw error;
-      const delay = Math.pow(2, i) * 2000 + Math.random() * 1000;
-      console.error(`[fetchWithRetry] Error de red en intento ${i + 1}: ${error.message}. Reintentando en ${Math.round(delay)}ms...`);
+      const delay = Math.pow(2, i) * 1000;
       await new Promise(resolve => setTimeout(resolve, delay));
     }
   }
@@ -35,78 +33,85 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Falta el historial' });
   }
 
-  const systemPromptText = "Eres el asistente virtual de Synapse, una plataforma SaaS de automatizacion inteligente con IA y Web3. Tono amable, cercano y profesional. Responde de forma concisa (2-3 parrafos) y usa emojis ocasionalmente. IMPORTANTE: Detecta el idioma del usuario y responde SIEMPRE en ese mismo idioma. Sobre Synapse: Es una DApp con chat IA disponible 24/7, usa Gemini y OpenRouter, permite integrar un widget de chat, se conecta con HubSpot CRM, acepta pagos con USDC en Polygon, se integra con WhatsApp, Instagram y Facebook mediante Callbell. PLANES: 1) BASICO $29/mes, 2) PRO $55/mes, 3) ENTERPRISE a consultar. CONTACTO: WhatsApp +58 412 2664528, Email: assistent.ai213@gmail.com.";
+  const systemPromptText = "Eres el asistente virtual de Synapse. Tono amable, cercano y profesional. Responde de forma concisa (2-3 párrafos) y usa emojis ocasionalmente. IMPORTANTE: Detecta el idioma del usuario y responde SIEMPRE en ese mismo idioma. Sobre Synapse: Es una DApp con chat IA disponible 24/7, se conecta con HubSpot CRM, acepta pagos con USDC en Polygon, se integra con WhatsApp, Instagram y Facebook mediante Callbell. PLANES: 1) BASICO $29/mes, 2) PRO $55/mes, 3) ENTERPRISE a consultar. CONTACTO: WhatsApp +58 412 2664528, Email: assistent.ai213@gmail.com.";
 
   try {
-    // ============ GEMINI (STREAMING) ============
-    if (provider === 'gemini') {
-      const apiKey = process.env.GEMINI_API_KEY;
-      if (!apiKey) return res.status(500).json({ error: 'GEMINI_API_KEY no configurada' });
-
-      const modelFinal = model || 'gemini-1.5-flash';
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelFinal}:streamGenerateContent?alt=sse&key=${apiKey}`;
-
-      const contents = historial.map((m, idx) => {
-        const parts = [{ text: m.content }];
-        if (idx === historial.length - 1 && imagen) {
-          const base64Data = imagen.split(',')[1];
-          const mimeType = imagen.split(';')[0].split(':')[1];
-          parts.push({ inline_data: { mime_type: mimeType, data: base64Data } });
-        }
-        return { role: m.role === 'assistant' ? 'model' : 'user', parts: parts };
-      });
-
-      const response = await fetchWithRetry(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: systemPromptText }] },
-          contents: contents,
-          generationConfig: { temperature: 0.85, maxOutputTokens: 800 }
-        })
-      });
-
-      if (!response.ok) {
-        const errText = await response.text();
-        return res.status(500).json({ error: `Error de Gemini: ${errText}` });
-      }
-
-      res.setHeader('Content-Type', 'text/event-stream');
-      res.setHeader('Cache-Control', 'no-cache');
-      res.setHeader('Connection', 'keep-alive');
-
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-
-      // Escribir keep-alive inicial
-      res.write(': keep-alive\n\n');
-
-      const keepAliveInterval = setInterval(() => {
-        res.write(': keep-alive\n\n');
-      }, 10000);
-
-      try {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          const chunk = decoder.decode(value, { stream: true });
-          res.write(chunk);
-        }
-      } catch (error) {
-        console.error('Error en streaming:', error);
-      } finally {
-        clearInterval(keepAliveInterval);
-        res.end();
-      }
-      return;
-    }
-
-    // ============ OPENROUTER ============
+    // ============ OPENROUTER (Con Failover a Gemini y Groq) ============
     if (provider === 'openrouter') {
-      const apiKey = process.env.OPENROUTER_API_KEY;
-      if (!apiKey) return res.status(500).json({ error: 'OPENROUTER_API_KEY no configurada' });
+      // 1. Intentar con Gemini primero
+      if (model === 'gemini-1.5-flash' || model === 'gemini-3.8-flash') {
+        try {
+          const apiKey = process.env.GEMINI_API_KEY;
+          const modelFinal = model || 'gemini-1.5-flash';
+          const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelFinal}:streamGenerateContent?alt=sse&key=${apiKey}`;
+          
+          const contents = historial.map((m) => ({
+            role: m.role === 'assistant' ? 'model' : 'user',
+            parts: [{ text: m.content }]
+          }));
 
-      let mensajes = [{ role: 'system', content: systemPromptText }, ...historial];
+          const response = await fetchWithRetry(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              systemInstruction: { parts: [{ text: systemPromptText }] },
+              contents: contents,
+              generationConfig: { temperature: 0.85, maxOutputTokens: 800 }
+            })
+          });
+
+          if (response.ok) {
+            res.setHeader('Content-Type', 'text/event-stream');
+            res.setHeader('Cache-Control', 'no-cache');
+            res.setHeader('Connection', 'keep-alive');
+            
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            const encoder = new TextEncoder();
+            
+            res.write(encoder.encode(': keep-alive\n\n'));
+            const keepAlive = setInterval(() => res.write(encoder.encode(': keep-alive\n\n')), 10000);
+            
+            try {
+              while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                res.write(decoder.decode(value, { stream: true }));
+              }
+            } finally {
+              clearInterval(keepAlive);
+              res.end();
+            }
+            return;
+          }
+        } catch (e) {
+          console.log("Gemini falló, intentando con Groq...");
+        }
+      }
+
+      // 2. Intentar con Groq
+      try {
+        const groqKey = process.env.GROQ_API_KEY;
+        const groqResponse = await fetchWithRetry('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${groqKey}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            model: 'llama-3.1-8b-instant', 
+            messages: [{ role: 'system', content: systemPromptText }, ...historial],
+            temperature: 0.85, max_tokens: 800 
+          })
+        });
+        
+        const groqData = await groqResponse.json();
+        if (groqResponse.ok && groqData.choices) {
+          return res.status(200).json({ reply: groqData.choices[0].message.content });
+        }
+      } catch (e) {
+        console.log("Groq falló, intentando con OpenRouter...");
+      }
+
+      // 3. Intentar con OpenRouter (Último recurso)
+      const apiKey = process.env.OPENROUTER_API_KEY;
       const response = await fetchWithRetry('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -115,14 +120,20 @@ export default async function handler(req, res) {
           'HTTP-Referer': 'https://synapse-v3-alpha.vercel.app',
           'X-Title': 'Synapse AI'
         },
-        body: JSON.stringify({ model: model || 'openrouter/free', messages: mensajes, temperature: 0.85, max_tokens: 800 })
+        body: JSON.stringify({ model: 'openrouter/free', messages: [{ role: 'system', content: systemPromptText }, ...historial], temperature: 0.85, max_tokens: 800 })
       });
       const data = await response.json();
-      if (!response.ok) return res.status(500).json({ error: data.error?.message || `Error ${response.status}` });
-      return res.status(200).json({ reply: data.choices[0].message.content });
+      
+      if (!response.ok) return res.status(500).json({ error: data.error?.message || "Todos los modelos gratuitos están saturados. Intenta de nuevo en unos minutos." });
+      
+      const reply = data.choices[0].message.content;
+      if (reply.includes("User Safety")) {
+        return res.status(200).json({ reply: "⚠️ El modelo gratuito bloqueó esta respuesta. Por favor, intenta con otro mensaje o espera un momento." });
+      }
+      return res.status(200).json({ reply });
     }
 
-    // ============ GROK ============
+    // ============ GROK (xAI) ============
     if (provider === 'groq') {
       const apiKey = process.env.XAI_API_KEY;
       if (!apiKey) return res.status(500).json({ error: 'XAI_API_KEY no configurada' });

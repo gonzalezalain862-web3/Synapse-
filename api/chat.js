@@ -141,7 +141,7 @@ export default async function handler(req, res) {
       const response = await fetchWithRetry('https://api.x.ai/v1/chat/completions', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: model || 'grok-4', messages: [{ role: 'system', content: systemPromptText }, ...historial], temperature: 0.85, max_tokens: 800 })
+        body: JSON.stringify({ model: model || 'grok-4.7', messages: [{ role: 'system', content: systemPromptText }, ...historial], temperature: 0.85, max_tokens: 800 })
       });
       const data = await response.json();
       if (!response.ok) return res.status(500).json({ error: data.error?.message || `Error ${response.status}` });

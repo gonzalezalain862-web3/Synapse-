@@ -13,10 +13,7 @@ async function fetchWithRetry(url, options, maxRetries = 5) {
       }
       return response;
     } catch (error) {
-      if (i === maxRetries - 1) {
-        console.error(`[fetchWithRetry] Error de red final en el intento ${i + 1}:`, error.message);
-        throw error;
-      }
+      if (i === maxRetries - 1) throw error;
       const delay = Math.pow(2, i) * 2000 + Math.random() * 1000;
       console.error(`[fetchWithRetry] Error de red en intento ${i + 1}: ${error.message}. Reintentando en ${Math.round(delay)}ms...`);
       await new Promise(resolve => setTimeout(resolve, delay));
@@ -41,7 +38,7 @@ export default async function handler(req, res) {
   const systemPromptText = "Eres el asistente virtual de Synapse, una plataforma SaaS de automatizacion inteligente con IA y Web3. Tono amable, cercano y profesional. Responde de forma concisa (2-3 parrafos) y usa emojis ocasionalmente. IMPORTANTE: Detecta el idioma del usuario y responde SIEMPRE en ese mismo idioma. Sobre Synapse: Es una DApp con chat IA disponible 24/7, usa Gemini y OpenRouter, permite integrar un widget de chat, se conecta con HubSpot CRM, acepta pagos con USDC en Polygon, se integra con WhatsApp, Instagram y Facebook mediante Callbell. PLANES: 1) BASICO $29/mes, 2) PRO $55/mes, 3) ENTERPRISE a consultar. CONTACTO: WhatsApp +58 412 2664528, Email: assistent.ai213@gmail.com.";
 
   try {
-    // ============ GEMINI (STREAMING CON TRANSFORMSTREAM) ============
+    // ============ GEMINI (STREAMING) ============
     if (provider === 'gemini') {
       const apiKey = process.env.GEMINI_API_KEY;
       if (!apiKey) return res.status(500).json({ error: 'GEMINI_API_KEY no configurada' });
@@ -71,7 +68,6 @@ export default async function handler(req, res) {
 
       if (!response.ok) {
         const errText = await response.text();
-        console.error('Error de Gemini:', errText);
         return res.status(500).json({ error: `Error de Gemini: ${errText}` });
       }
 
@@ -79,34 +75,30 @@ export default async function handler(req, res) {
       res.setHeader('Cache-Control', 'no-cache');
       res.setHeader('Connection', 'keep-alive');
 
-      // Usar TransformStream para evitar el buffering de Vercel
-      const transformStream = new TransformStream();
-      const writer = transformStream.writable.getWriter();
-      const encoder = new TextEncoder();
+      const reader = response.body.getReader();
       const decoder = new TextDecoder();
 
-      // Escribir un comentario inicial para mantener la conexión viva
-      writer.write(encoder.encode(': keep-alive\n\n'));
+      // Escribir keep-alive inicial
+      res.write(': keep-alive\n\n');
 
-      // Procesar el stream de Gemini en segundo plano
-      (async () => {
-        try {
-          const reader = response.body.getReader();
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            const chunk = decoder.decode(value, { stream: true });
-            await writer.write(encoder.encode(chunk));
-          }
-        } catch (error) {
-          console.error('Error en streaming:', error);
-        } finally {
-          await writer.close();
+      const keepAliveInterval = setInterval(() => {
+        res.write(': keep-alive\n\n');
+      }, 10000);
+
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          const chunk = decoder.decode(value, { stream: true });
+          res.write(chunk);
         }
-      })();
-
-      // Devolver el stream inmediatamente
-      return res.send(transformStream.readable);
+      } catch (error) {
+        console.error('Error en streaming:', error);
+      } finally {
+        clearInterval(keepAliveInterval);
+        res.end();
+      }
+      return;
     }
 
     // ============ OPENROUTER ============

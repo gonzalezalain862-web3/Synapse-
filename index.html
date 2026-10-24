@@ -1087,6 +1087,30 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
     <input type="text" id="bubble-welcome" placeholder="¡Hola! ¿Cómo puedo ayudarte?" style="width:100%; padding:10px; background:#1e1b4b; color:#fff; border:1px solid #7c3aed; border-radius:8px; margin-bottom:10px; box-sizing:border-box;">
     <button onclick="guardarConfiguracionBurbuja()" style="width:100%; padding:12px; background:linear-gradient(135deg,#7c3aed,#a855f7); color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">💾 Guardar Estilo</button>
   </div>
+<div id="prompt-starters" style="display:flex; gap:8px; overflow-x:auto; padding: 0 20px 10px 20px; scrollbar-width:none; -ms-overflow-style:none;">
+  <button onclick="enviarPromptSugerido('¿Cuáles son los planes y precios de Synapse?')" class="prompt-chip">💎 Ver precios</button>
+  <button onclick="enviarPromptSugerido('¿Cómo funciona la integración con HubSpot y Callbell?')" class="prompt-chip">🔗 Integraciones</button>
+  <button onclick="enviarPromptSugerido('¿Cómo puedo personalizar la burbuja de chat para mi web?')" class="prompt-chip">🎨 Personalizar web</button>
+  <button onclick="enviarPromptSugerido('Explícame cómo funcionan los pagos con USDC en Polygon.')" class="prompt-chip">🪙 Pagos Web3</button>
+</div>
+<style>
+  #prompt-starters::-webkit-scrollbar { display: none; }
+  .prompt-chip {
+    background: rgba(168, 85, 247, 0.1);
+    border: 1px solid #7c3aed;
+    color: #c084fc;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .prompt-chip:hover {
+    background: #7c3aed;
+    color: white;
+  }
+</style>
   <div class="chat-input-area">
     <textarea id="chat-input" rows="1" placeholder="Escribe tu mensaje aquí..." style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;resize:none;font-family:inherit;box-sizing:border-box;max-height:120px;overflow-y:auto;" oninput="this.style.height='auto'; this.style.height=Math.min(this.scrollHeight, 120)+'px';" onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault();sendMessage();}"></textarea>
     <button id="send-btn" onclick="sendMessage()" style="background: linear-gradient(135deg, rgb(124, 58, 237), rgb(168, 85, 247)); color: white; border: none; border-radius: 30px; padding: 12px 24px; font-weight: bold; cursor: pointer; margin: 15px auto 10px; display: flex; justify-content: center; min-width: 120px; font-size: 16px;">Enviar</button>
@@ -1309,6 +1333,7 @@ async function fetchGemini(msg, modelId) {
   return fullText;
 }
 async function sendMessage() {
+  const starters = document.getElementById("prompt-starters"); if (starters) starters.style.display = "none";
   if (isSending) return;
   const input = document.getElementById("chat-input");
   const message = input.value.trim();
@@ -1976,6 +2001,17 @@ async function guardarMensajeSupabase(role, content) {
     currentConversationId = data.id;
   }
   await window.sb.from('chat_messages').insert([{ conversation_id: currentConversationId, role: role, content: content }]);
+}
+</script>
+<script>
+function enviarPromptSugerido(texto) {
+  const input = document.getElementById('chat-input');
+  if (input) {
+    input.value = texto;
+    const starters = document.getElementById('prompt-starters');
+    if (starters) starters.style.display = 'none';
+    sendMessage();
+  }
 }
 </script>
 </body>

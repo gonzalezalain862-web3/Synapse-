@@ -1352,12 +1352,21 @@ async function sendMessage() {
     let respuesta = '';
     if (provider === 'groq') {
       respuesta = await fetchGroq(message, model);
+      typing.remove();
+      if (respuesta) addMessage('bot', respuesta);
     } else if (provider === 'openrouter') {
       respuesta = await fetchOpenRouter(message, model);
+      typing.remove();
+      if (respuesta && !respuesta.includes("User Safety")) {
+        addMessage('bot', respuesta);
+      } else {
+        addMessage('bot', '⚠️ El modelo gratuito está saturado o bloqueado. Por favor, selecciona Gemini en el menú superior.');
+      }
     } else if (provider === 'gemini') {
-      respuesta = await fetchGemini(message, model);
+      // fetchGemini ya maneja el mensaje en pantalla gracias al streaming
+      await fetchGemini(message, model);
+      typing.remove(); 
     }
-    typing.remove();
   } catch(e) {
     typing.remove();
     addMessage('bot', '⚠️ Error: '+e.message);

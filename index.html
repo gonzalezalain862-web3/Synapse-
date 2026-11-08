@@ -1070,3 +1070,21 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   </div>
   <div class="ai-selector">
     <input type="hidden" id="chat-provider" value="openrouter">
+<script>
+  window.toggleChat = function() {
+    const panel = document.getElementById('chat-panel');
+    if (panel) panel.classList.toggle('active');
+  };
+  window.toggleMobileMenu = function() {
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (hamburger) hamburger.classList.toggle('active');
+    if (mobileMenu) mobileMenu.classList.toggle('active');
+  };
+  window.closeMobileMenu = function() {
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (hamburger) hamburger.classList.remove('active');
+    if (mobileMenu) mobileMenu.classList.remove('active');
+  };
+</script>

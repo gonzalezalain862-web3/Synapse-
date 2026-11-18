@@ -710,6 +710,50 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   }
 }
 </style>
+<style id="force-chat-visible">
+  #chat-panel.active {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 500px !important;
+    min-height: 500px !important;
+    max-height: 85vh !important;
+    overflow: hidden !important;
+    background: #0f0a1f !important;
+    z-index: 99999 !important;
+  }
+  #chat-panel.active .ai-selector {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    min-height: 50px !important;
+    flex-shrink: 0 !important;
+    padding: 10px !important;
+  }
+  #chat-panel.active select#chat-model {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 100% !important;
+  }
+  #chat-panel.active .conversaciones-container {
+    display: flex !important;
+    flex: 1 1 0 !important;
+    min-height: 100px !important;
+    overflow-y: auto !important;
+  }
+  #chat-panel.active .chat-input-area {
+    display: flex !important;
+    flex-direction: column !important;
+    flex-shrink: 0 !important;
+    padding: 10px !important;
+  }
+  #chat-panel.active .chat-input-area textarea,
+  #chat-panel.active .chat-input-area button {
+    display: block !important;
+    visibility: visible !important;
+  }
+</style>
 </head>
 <body>
 <!-- Botón de Facebook -->
@@ -1070,22 +1114,34 @@ section p { font-size:1.05rem; color:var(--muted); margin-bottom:1.5rem; max-wid
   </div>
   <div class="ai-selector">
     <input type="hidden" id="chat-provider" value="openrouter">
-<script>
-  window.toggleChat = function() {
-    const panel = document.getElementById('chat-panel');
-    if (panel) panel.classList.toggle('active');
-  };
-  window.toggleMobileMenu = function() {
-    const hamburger = document.getElementById('hamburger');
-    const mobileMenu = document.getElementById('mobile-menu');
-    if (hamburger) hamburger.classList.toggle('active');
-    if (mobileMenu) mobileMenu.classList.toggle('active');
-  };
-  window.closeMobileMenu = function() {
-    const hamburger = document.getElementById('hamburger');
-    const mobileMenu = document.getElementById('mobile-menu');
-    if (hamburger) hamburger.classList.remove('active');
-    if (mobileMenu) mobileMenu.classList.remove('active');
-  };
+    <select id="chat-model" style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;cursor:pointer;" aria-label="Seleccionar">
+      <optgroup label="Google Gemini">
+        <option value="gemini-1.5-flash" data-provider="gemini" selected>✨ Gemini 1.5 Flash (Recomendado)</option>
+      </optgroup>
+      <optgroup label="OpenRouter (Gratis)">
+        <option value="openrouter/free" data-provider="openrouter">🆓 Auto Gratis</option>
+      </optgroup>
+    </select>
+  </div>
+  <div class="conversaciones-container" id="chat-messages"></div>
+  <button onclick="const c=document.getElementById('bubble-customizer'); c.style.display = c.style.display === 'none' ? 'block' : 'none';" style="width:100%; padding:10px; background:#1e1b4b; color:#a855f7; border:1px solid #7c3aed; border-radius:8px; cursor:pointer; margin:8px 0; font-size:13px; font-weight:bold;">🎨 Personalizar Burbuja</button>
+  <div id="bubble-customizer" style="display:none; margin:8px 0; padding:15px; background:#0f0a1f; border:1px solid #7c3aed; border-radius:10px;">
+    <h4 style="color:#a855f7; margin-top:0;">🎨 Personaliza tu Burbuja</h4>
+    <label style="color:#c084fc; font-size:13px;">Color principal:</label>
+    <input type="color" id="bubble-color" value="#8b5cf6" style="width:100%; height:40px; border:none; border-radius:8px; margin-bottom:10px; cursor:pointer;">
+    <label style="color:#c084fc; font-size:13px;">Posición:</label>
+    <select id="bubble-position" style="width:100%; padding:10px; background:#1e1b4b; color:#fff; border:1px solid #7c3aed; border-radius:8px; margin-bottom:10px;">
+      <option value="bottom-right">Abajo a la derecha</option>
+      <option value="bottom-left">Abajo a la izquierda</option>
+    </select>
+    <label style="color:#c084fc; font-size:13px;">Mensaje de bienvenida:</label>
+    <input type="text" id="bubble-welcome" placeholder="¡Hola! ¿Cómo puedo ayudarte?" style="width:100%; padding:10px; background:#1e1b4b; color:#fff; border:1px solid #7c3aed; border-radius:8px; margin-bottom:10px; box-sizing:border-box;">
+    <button onclick="guardarConfiguracionBurbuja()" style="width:100%; padding:12px; background:linear-gradient(135deg,#7c3aed,#a855f7); color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">💾 Guardar Estilo</button>
+  </div>
+  <div class="chat-input-area">
+    <textarea id="chat-input" rows="1" placeholder="Escribe tu mensaje aquí..." style="width:100%;padding:12px;background:#1e1b4b;color:#fff;border:1px solid #7c3aed;border-radius:8px;font-size:14px;resize:none;font-family:inherit;box-sizing:border-box;max-height:120px;overflow-y:auto;" oninput="this.style.height='auto'; this.style.height=Math.min(this.scrollHeight, 120)+'px';" onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault();sendMessage();}"></textarea>
+    <button id="send-btn" onclick="sendMessage()" style="background: linear-gradient(135deg, rgb(124, 58, 237), rgb(168, 85, 247)); color: white; border: none; border-radius: 30px; padding: 12px 24px; font-weight: bold; cursor: pointer; margin: 15px auto 10px; display: flex; justify-content: center; min-width: 120px; font-size: 16px;">Enviar</button>
+  </div>
+</div>
 </script>
 <script>
